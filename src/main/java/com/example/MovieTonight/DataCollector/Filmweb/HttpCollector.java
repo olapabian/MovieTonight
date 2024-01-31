@@ -1,4 +1,4 @@
-package com.example.MovieTonight.DataCollector;
+package com.example.MovieTonight.DataCollector.Filmweb;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

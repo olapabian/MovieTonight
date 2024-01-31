@@ -10,7 +10,6 @@ import lombok.Setter;
 @Table(name = "movie_images")
 public class MovieImage {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "img_id", nullable = false)
     private Long id;
 

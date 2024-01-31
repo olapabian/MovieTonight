@@ -7,17 +7,17 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "images")
-public class Image {
+@Table(name = "movie_directors")
+public class MovieDirector {
     @Id
     @Column(name = "rowid", nullable = false)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "person_id")
-    private ActorsInfo person;
+    @JoinColumn(name = "director_id")
+    private DirectorsInfo director;
 
-    @Column(name = "img")
-    private byte[] img;
+    @Column(name = "tmdb_id")
+    private Long tmdbId;
 
 }

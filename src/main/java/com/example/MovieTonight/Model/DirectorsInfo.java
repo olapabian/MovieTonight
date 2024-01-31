@@ -10,16 +10,13 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "users")
-public class User {
+@Table(name = "directors_info")
+public class DirectorsInfo {
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "director_id", nullable = false)
     private Long id;
 
-    @Column(name = "username", length = Integer.MAX_VALUE)
-    private String username;
-
-    @Column(name = "hashpassword", length = Integer.MAX_VALUE)
-    private String hashpassword;
+    @Column(name = "full_name", length = Integer.MAX_VALUE)
+    private String fullName;
 
 }

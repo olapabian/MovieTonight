@@ -1,6 +1,9 @@
 package com.example.MovieTonight.Model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,12 +13,8 @@ import lombok.Setter;
 @Table(name = "questions")
 public class Question {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "rowid", nullable = false)
+    @Column(name = "question_id", nullable = false)
     private Long id;
-
-    @Column(name = "question_id")
-    private Long questionId;
 
     @Column(name = "content", length = Integer.MAX_VALUE)
     private String content;

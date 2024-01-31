@@ -1,6 +1,9 @@
 package com.example.MovieTonight.Model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,23 +22,10 @@ public class TmdbMovie {
     @Column(name = "production_countries", length = Integer.MAX_VALUE)
     private String productionCountries;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "genres")
-    private Genre genres;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "keywords")
-    private Keyword keywords;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "actors")
-    private Actor actors;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "director")
-    private Director director;
-
     @Column(name = "runtime")
     private Long runtime;
+
+    @Column(name = "popularity")
+    private Double popularity;
 
 }

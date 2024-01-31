@@ -1,6 +1,9 @@
 package com.example.MovieTonight.Model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,14 +15,6 @@ public class FilmwebMovie {
     @Id
     @Column(name = "filmweb_id", nullable = false)
     private Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "providers")
-    private Provider providers;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "rewards")
-    private Reward rewards;
 
     @Column(name = "release_date")
     private Long releaseDate;

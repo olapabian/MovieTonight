@@ -7,19 +7,24 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.Instant;
+
 @Getter
 @Setter
 @Entity
-@Table(name = "users")
-public class User {
+@Table(name = "databasechangeloglock")
+public class Databasechangeloglock {
     @Id
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "username", length = Integer.MAX_VALUE)
-    private String username;
+    @Column(name = "locked", nullable = false)
+    private Boolean locked = false;
 
-    @Column(name = "hashpassword", length = Integer.MAX_VALUE)
-    private String hashpassword;
+    @Column(name = "lockgranted")
+    private Instant lockgranted;
+
+    @Column(name = "lockedby")
+    private String lockedby;
 
 }
