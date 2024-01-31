@@ -1,18 +1,25 @@
 package com.example.MovieTonight;
 
-import com.example.MovieTonight.DataCollector.Filmweb.IdAndTitleCollector;
+import com.example.MovieTonight.DataCollector.Filmweb.FilmwebCollector;
+import com.example.MovieTonight.Repository.MovieRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class MovieTonightApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(MovieTonightApplication.class, args);
-		//pobieranie id i tytulu do pliku
-		IdAndTitleCollector collector = new IdAndTitleCollector();
-		String result = collector.Collect();
-		System.out.println(result);
-	}
 
+	public static void main(String[] args) {
+
+		// Run the Spring application
+		SpringApplication.run(MovieTonightApplication.class, args);
+
+		// Uncomment the following lines if you want to collect data
+		// from Filmweb during application startup
+//        IdAndTitleCollector idAndTitleCollector = new IdAndTitleCollector();
+//        idAndTitleCollector.Collect();
+
+
+	}
 }
