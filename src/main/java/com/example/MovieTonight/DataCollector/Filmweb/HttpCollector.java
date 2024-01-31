@@ -19,6 +19,8 @@ public class HttpCollector {
     public void Collect() throws IOException {
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestProperty("x-locale", "pl-PL");
+        // Ustawienie limitu czasu odczytu na 5000 milisekund (5 sekund)
+        con.setReadTimeout(5000);
         int responseCode = con.getResponseCode();
         {
             BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
