@@ -1,24 +1,26 @@
 package com.example.MovieTonight.DataCollector.Filmweb;
 
 
-import com.example.MovieTonight.JSONs.InfoRequest;
-import com.example.MovieTonight.JSONs.RatingRequest;
+import com.example.MovieTonight.JSONs.Filmweb.InfoRequest;
+import com.example.MovieTonight.JSONs.Filmweb.RatingRequest;
 import com.google.gson.Gson;
+import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 @Service
 @AllArgsConstructor
 public class IdAndTitleCollector {
+//    @PostConstruct
     public String Collect() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("filmwebIDs.txt"));
-             BufferedWriter titleWriter = new BufferedWriter(new FileWriter("titles.txt"))) {
+             BufferedWriter titleWriter = new BufferedWriter(new FileWriter("titles.txt"));
+             BufferedWriter yearWriter = new BufferedWriter(new FileWriter("years.txt"))) {
 
             int number = 0;
 
@@ -68,14 +70,22 @@ public class IdAndTitleCollector {
                     InfoRequest infoRequest = gson1.fromJson(response1, InfoRequest.class);
 
                     // Pobierz tytuł z obiektu InfoRequest
-                    titleWriter.write(infoRequest.getTitle());
-                    titleWriter.newLine();
-
+                    if (infoRequest.getOriginalTitle() != null && !infoRequest.getOriginalTitle().isEmpty()) {
+                        titleWriter.write(infoRequest.getOriginalTitle());
+                        titleWriter.newLine();
+                    }
+                    else {
+                        titleWriter.write(infoRequest.getTitle());
+                        titleWriter.newLine();
+                    }
+                    yearWriter.write(String.valueOf(infoRequest.getYear()));
+                    yearWriter.newLine();
 //                    System.out.println();
                 }
 
                 number++;
             }
+            System.out.println("pobrano do pliku");
             return "pobrano dane";
         } catch (IOException e) {
             e.printStackTrace();

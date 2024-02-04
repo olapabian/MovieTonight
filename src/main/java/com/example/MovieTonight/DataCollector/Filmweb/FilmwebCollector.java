@@ -1,9 +1,9 @@
 package com.example.MovieTonight.DataCollector.Filmweb;
 
-import com.example.MovieTonight.JSONs.InfoRequest;
-import com.example.MovieTonight.JSONs.MovieProvidersRequest;
-import com.example.MovieTonight.JSONs.ProvidersRequest;
-import com.example.MovieTonight.JSONs.RatingRequest;
+import com.example.MovieTonight.JSONs.Filmweb.InfoRequest;
+import com.example.MovieTonight.JSONs.Filmweb.MovieProvidersRequest;
+import com.example.MovieTonight.JSONs.Filmweb.ProvidersRequest;
+import com.example.MovieTonight.JSONs.Filmweb.RatingRequest;
 import com.example.MovieTonight.Model.FilmwebMovie;
 import com.example.MovieTonight.Model.Movie;
 import com.example.MovieTonight.Model.MovieProvider;
@@ -31,7 +31,8 @@ public class FilmwebCollector {
     private final FilmwebMovieRepository filmwebMovieRepository;
     private final ProvidersInfoRepository providersInfoRepository;
     private final MovieProvidersRepository movieProvidersRepository;
-    @PostConstruct // sie uruchomi po starcie apki
+//    @PostConstruct // sie uruchomi po starcie apki
+
     public void filmwebCollect() throws IOException {
 
         //collectProvidersInfo(); //lista wszystkich providers
@@ -40,8 +41,9 @@ public class FilmwebCollector {
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = br.readLine()) != null) {
-//                collectMovie(line); //movie and filmwebMovies
-                collectMovieProviders(line); //dla kazdego filmu liste
+                collectMovie(line); //movie and filmwebMovies
+                collectMovieProviders(line); //dla kazdego filmu liste providers
+                System.out.println("ada");
             }
         } catch (IOException e) {
             e.printStackTrace(); // Handle the exception according to your application's needs
@@ -66,7 +68,11 @@ public class FilmwebCollector {
             movie.setTitle(titleAsString);
 
             // original title to movie
-            String originalTitleAsString = String.valueOf(infoRequest.getOriginalTitle());
+            String originalTitleAsString = null;
+            if (infoRequest.getOriginalTitle() != null && !infoRequest.getOriginalTitle().isEmpty())  {
+                originalTitleAsString = String.valueOf(infoRequest.getOriginalTitle());
+            }
+            else originalTitleAsString = String.valueOf(infoRequest.getTitle());
             movie.setOriginalTitle(originalTitleAsString);
 
             // release date
@@ -134,7 +140,7 @@ public class FilmwebCollector {
                     ProvidersInfo providersInfo1 = providersInfo.get();
                     movieProvider.setProvider(providersInfo1);
                 }
-                
+
                 //Ustawienie filmwebMovie
                 Long filmwbIsAsLong = Long.valueOf(filmwebId);
                 Optional<FilmwebMovie> filmwebMovie = filmwebMovieRepository.findById(filmwbIsAsLong);
@@ -147,4 +153,6 @@ public class FilmwebCollector {
             }
         }
     }
+
+
 }

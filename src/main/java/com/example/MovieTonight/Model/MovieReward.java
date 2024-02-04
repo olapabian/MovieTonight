@@ -17,4 +17,8 @@ public class MovieReward {
     @JoinColumn(name = "filmweb_id")
     private FilmwebMovie filmweb;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reward_id")
+    private RewardsInfo reward;
+
 }

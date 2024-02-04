@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 @Entity
@@ -11,6 +13,7 @@ import lombok.Setter;
 public class MovieImage {
     @Id
     @Column(name = "img_id", nullable = false)
+//    private UUID id;
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

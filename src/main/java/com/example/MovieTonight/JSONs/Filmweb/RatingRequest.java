@@ -1,4 +1,4 @@
-package com.example.MovieTonight.JSONs;
+package com.example.MovieTonight.JSONs.Filmweb;
 import com.google.gson.annotations.SerializedName;
 
 public class RatingRequest {
