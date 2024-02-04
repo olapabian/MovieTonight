@@ -10,6 +10,7 @@ import lombok.Setter;
 @Table(name = "movie_genres")
 public class MovieGenre {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "rowid", nullable = false)
     private Long id;
 
@@ -17,4 +18,7 @@ public class MovieGenre {
     @JoinColumn(name = "genre_id")
     private GenresInfo genre;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tmdb_id")
+    private TmdbMovie tmdbMovie;
 }

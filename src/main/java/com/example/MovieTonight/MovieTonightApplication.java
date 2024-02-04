@@ -15,11 +15,6 @@ public class MovieTonightApplication {
 		// Run the Spring application
 		SpringApplication.run(MovieTonightApplication.class, args);
 
-		// Uncomment the following lines if you want to collect data
-		// from Filmweb during application startup
-//        IdAndTitleCollector idAndTitleCollector = new IdAndTitleCollector();
-//        idAndTitleCollector.Collect();
-
 
 	}
 }

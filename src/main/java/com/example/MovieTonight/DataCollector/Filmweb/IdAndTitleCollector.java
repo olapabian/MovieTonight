@@ -17,13 +17,14 @@ import java.net.URL;
 @AllArgsConstructor
 public class IdAndTitleCollector {
 //    @PostConstruct
-    public String Collect() {
+    public String collect() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("filmwebIDs.txt"));
              BufferedWriter titleWriter = new BufferedWriter(new FileWriter("titles.txt"));
              BufferedWriter yearWriter = new BufferedWriter(new FileWriter("years.txt"))) {
 
             int number = 0;
 
+            //Pętla ograniczająca
             for (int filmId = 1; number <= 100; filmId++) {
 //                System.out.println(filmId);
                 RatingRequest ratingRequest = new RatingRequest();

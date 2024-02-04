@@ -35,7 +35,7 @@ public class FilmwebCollector {
 
     public void filmwebCollect() throws IOException {
 
-        //collectProvidersInfo(); //lista wszystkich providers
+        collectProvidersInfo(); //lista wszystkich providers
 
         String filePath = "filmwebIds.txt";
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
@@ -43,7 +43,7 @@ public class FilmwebCollector {
             while ((line = br.readLine()) != null) {
                 collectMovie(line); //movie and filmwebMovies
                 collectMovieProviders(line); //dla kazdego filmu liste providers
-                System.out.println("ada");
+//                System.out.println("ada");
             }
         } catch (IOException e) {
             e.printStackTrace(); // Handle the exception according to your application's needs

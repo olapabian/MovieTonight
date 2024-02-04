@@ -10,11 +10,16 @@ import lombok.Setter;
 @Table(name = "movie_keywords")
 public class MovieKeyword {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "rowid", nullable = false)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "keyword_id")
     private KeywordsInfo keyword;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tmdb_id")
+    private TmdbMovie tmdb;
 
 }

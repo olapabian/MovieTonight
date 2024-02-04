@@ -10,6 +10,7 @@ import lombok.Setter;
 @Table(name = "movie_actors")
 public class MovieActor {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "rowid", nullable = false)
     private Long id;
 
@@ -17,7 +18,8 @@ public class MovieActor {
     @JoinColumn(name = "actor_id")
     private ActorsInfo actor;
 
-    @Column(name = "tmdb_id")
-    private Long tmdbId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tmdb_id")
+    private TmdbMovie tmdbMovie;
 
 }

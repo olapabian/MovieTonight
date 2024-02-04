@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 @Service
 public class ApiCollector {
 
-    private final String apiKey = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiNmM4ODAyMzBiNGQwNmFmOTEzZTBkYjMzNWRmZGRmNyIsInN1YiI6IjY1YmY3YTBhYmE0ODAyMDE2MTZhYTM1MiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.rKt_p6dsHDT4DpYwpzTcsghcfFYw1rG7PaMetM0R8Vk"; // Twój prawidłowy klucz API
+    private final String apiKey = ""; // Token autoryzacyjny a nie api key
 
 //    @PostConstruct
     public Response collect(String url) throws IOException {
