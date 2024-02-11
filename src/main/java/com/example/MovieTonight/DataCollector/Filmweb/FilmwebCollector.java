@@ -14,6 +14,7 @@ import com.example.MovieTonight.Repository.MovieRepository;
 import com.example.MovieTonight.Repository.ProvidersInfoRepository;
 import com.google.gson.Gson;
 import jakarta.annotation.PostConstruct;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -50,6 +51,7 @@ public class FilmwebCollector {
         }
         System.out.println("pobrano dane");
     }
+    @Transactional
     public void collectMovie(String filmwebId) throws IOException {
         //Zmienne pomocnicze
         Movie movie = new Movie();
@@ -62,7 +64,7 @@ public class FilmwebCollector {
             String response = String.valueOf(httpCollector.getResponse());
             Gson gson = new Gson();
             InfoRequest infoRequest = gson.fromJson(response, InfoRequest.class);
-
+            System.out.println(filmwebId);
             //title to movie
             String titleAsString = String.valueOf(infoRequest.getTitle());
             movie.setTitle(titleAsString);
@@ -105,7 +107,7 @@ public class FilmwebCollector {
         filmwebMovieRepository.save(filmwebMovie);
         movieRepository.save(movie);
     }
-
+    @Transactional
     public void collectProvidersInfo() throws IOException {
         URL url = new URL("https://www.filmweb.pl/api/v1/vod/providers/list");
         HttpCollector httpCollector = new HttpCollector(url);
@@ -122,6 +124,7 @@ public class FilmwebCollector {
             }
         }
     }
+    @Transactional
     public void collectMovieProviders(String filmwebId) throws IOException {
         URL url = new URL("https://www.filmweb.pl/api/v1/vod/film/" + filmwebId + "/providers/list");
         HttpCollector httpCollector = new HttpCollector(url);
