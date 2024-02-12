@@ -51,6 +51,7 @@ public class TMDBCollector {
             String filmwebId;
             while ((line = br.readLine()) != null && (year = br2.readLine()) != null && (filmwebId = br3.readLine()) != null) {
                 saveTmdb(line, year, filmwebId); //tabela filmwebMovies
+                System.out.println(line);
 //                ile++;
 //                System.out.println(ile);
             }
@@ -83,7 +84,7 @@ public class TMDBCollector {
                         //petla po liscie wynikow wyszukiwania filmu
                         for (int i = 0; i < movieSearchResponse.getResults().size(); ++i) {
                             GsonMovie gsonMovie = movieSearchResponse.getResults().get(i);
-                            if (gsonMovie.getReleaseDate().length() >= 4) {
+                            if (gsonMovie.getReleaseDate() != null && gsonMovie.getReleaseDate().length() >= 4) {
                                 if (gsonMovie.getOriginalTitle().equals(title) && gsonMovie.getReleaseDate().substring(0, 4).equals(year)) {
                                     //TMDB Id
                                     tmdbMovie.setId(gsonMovie.getId());
@@ -234,6 +235,7 @@ public class TMDBCollector {
 
         }
         catch (Exception e){
+            System.out.println(e.getMessage());
             saveTmdb(title,year,filmwebId);
         }
 
