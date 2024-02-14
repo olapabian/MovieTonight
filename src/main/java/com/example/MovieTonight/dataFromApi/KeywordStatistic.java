@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 public class KeywordStatistic{
     private long genreId;
-    private int occurrences;
+    private long occurrences;
 
     public void increaseOccurrences(){
         this.occurrences++;

@@ -1,18 +1,17 @@
 package com.example.MovieTonight.services.implementations;
 
-import com.example.MovieTonight.JSONs.TMDB.MovieDetails;
 import com.example.MovieTonight.dataFromApi.KeywordCount;
+import com.example.MovieTonight.model.database.KeywordPoints;
 import com.example.MovieTonight.dataFromApi.KeywordStatistic;
+import com.example.MovieTonight.mappers.KeywordMapper;
 import com.example.MovieTonight.model.database.KeywordsInfo;
 import com.example.MovieTonight.model.database.MovieGenre;
 import com.example.MovieTonight.model.database.ProvidersInfo;
-import com.example.MovieTonight.model.database.TmdbMovie;
 import com.example.MovieTonight.repository.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 @Service
 @AllArgsConstructor
@@ -23,6 +22,8 @@ public class ProviderInfoServiceImp {
     MovieGenresRepository movieGenresRepository;
     MovieKeywordRepository movieKeywordRepository;
     KeywordsInfoRepository keywordsInfoRepository;
+    KeywordPointsRepository keywordPointsRepository;
+    KeywordMapper keywordMapper;
 
     public List<ProvidersInfo> getAllProviders() {
 
@@ -38,14 +39,11 @@ public class ProviderInfoServiceImp {
 
     public List<KeywordCount> getGenres(long keywordId) {
 
-
         List<Object[]> queryResults = movieKeywordRepository.countKeywordsPerEntity(keywordId);
         List<KeywordCount> keywordCounts = new ArrayList<>();
 
         for (Object[] result : queryResults) {
-            KeywordCount keywordCount = new KeywordCount();
-            keywordCount.setKeywordId((Long) result[0]);
-            keywordCount.setGenreId((Long) result[1]);
+            KeywordCount keywordCount = keywordMapper.mapFromObjectToKeywordCount(result);
             keywordCounts.add(keywordCount);
         }
 
@@ -53,14 +51,14 @@ public class ProviderInfoServiceImp {
         return keywordCounts;
     }
 
-    public HashMap<Long, List<KeywordStatistic>> countGenresOccurrenceForKeywords() {
+    public void countGenresOccurrenceForKeywords() {
         List<KeywordsInfo> list = keywordsInfoRepository.findAll();
         List<Long> keywordIds = new ArrayList<>();
         for(KeywordsInfo keywordsInfo: list){
             keywordIds.add(keywordsInfo.getId());
         }
 
-        HashMap<Long, List<KeywordStatistic>> resultMap = new HashMap<>();
+        List<KeywordPoints> resultList = new ArrayList<>();
 
         for (Long keywordId : keywordIds) {
             List<KeywordStatistic> keywordStatistic = new ArrayList<>();
@@ -80,12 +78,14 @@ public class ProviderInfoServiceImp {
                     newStatistic.setGenreId(kcount.getGenreId());
                     newStatistic.setOccurrences(1);
                     keywordStatistic.add(newStatistic);
-                }
-            }
-            resultMap.put(keywordId, keywordStatistic);
-        }
 
-        return resultMap;
+                }
+
+            }
+            resultList.addAll(keywordMapper.mapFromKeywordStatisticListToKeywordPoints(keywordId, keywordStatistic));
+        }
+        keywordPointsRepository.saveAll(resultList);
+
     }
 
 }
