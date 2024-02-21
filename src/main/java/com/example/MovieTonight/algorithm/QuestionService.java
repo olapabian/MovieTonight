@@ -4,10 +4,8 @@ import com.example.MovieTonight.mappers.Mapper;
 import com.example.MovieTonight.model.database.GenresInfo;
 import com.example.MovieTonight.model.database.KeywordPoints;
 import com.example.MovieTonight.model.database.KeywordsInfo;
-import com.example.MovieTonight.repository.GenresInfoRepository;
-import com.example.MovieTonight.repository.KeywordPointsRepository;
-import com.example.MovieTonight.repository.KeywordsInfoRepository;
-import com.example.MovieTonight.repository.MoviePointsRepository;
+import com.example.MovieTonight.model.database.MoviePoints;
+import com.example.MovieTonight.repository.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +21,7 @@ public class QuestionService {
     GenresInfoRepository genresInfoRepository;
     MoviePointsRepository moviePointsRepository;
     KeywordPointsRepository keywordPointsRepository;
+    MovieGenresRepository movieGenresRepository;
     Mapper mapper;
 
     public void stimulateAlgorithm(){ //stumulatoalogrytmoinator
@@ -31,7 +30,6 @@ public class QuestionService {
         Zalozmy ze uzytkownik ma ochote na film z ciemnej strony mocy
         */
         List<GenresInfo> genres = new ArrayList<>();
-        List<KeywordPoints> keywords = new ArrayList<>();
         FalseUser falseUser = new FalseUser(genresInfoRepository.findAll());
 
         genres.add(genresInfoRepository.findById(18L).get());//dramat
@@ -55,7 +53,18 @@ public class QuestionService {
                 }
             }
         }
-        System.out.println(falseUser);
+
+        //System.out.println(falseUser);
+        List<Long> GenreIds = List.of(18L, 53L, 80L, 27L);
+        List<Long>getMoviesIdFromQuiz = movieGenresRepository.moviesFromQuiz(GenreIds, new ArrayList<>()); //negativ puste
+
+        for(Long id: getMoviesIdFromQuiz){
+            List<MoviePoints> movieList = moviePointsRepository.getMoviePointsByTmdbId(id);
+
+            for(MoviePoints movie: movieList){
+                //TODO logika zliczania pkt dla filmow, sposob przechowywania tego dla uzytkownika
+            }
+        }
 
     }
 
