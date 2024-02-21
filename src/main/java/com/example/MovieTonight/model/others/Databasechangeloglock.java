@@ -1,3 +1,4 @@
+/*
 package com.example.MovieTonight.model.others;
 
 import jakarta.persistence.Column;
@@ -27,4 +28,4 @@ public class Databasechangeloglock {
     @Column(name = "lockedby")
     private String lockedby;
 
-}
+}*/

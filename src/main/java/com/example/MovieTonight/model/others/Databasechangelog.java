@@ -1,3 +1,4 @@
+/*
 package com.example.MovieTonight.model.others;
 
 import jakarta.persistence.Column;
@@ -60,4 +61,4 @@ public class Databasechangelog {
     @Column(name = "deployment_id", length = 10)
     private String deploymentId;
 
-}
+}*/

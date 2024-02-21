@@ -1,13 +1,11 @@
 package com.example.MovieTonight.controllers;
 
 import com.example.MovieTonight.dataFromApi.KeywordCount;
-import com.example.MovieTonight.model.database.KeywordPoints;
 import com.example.MovieTonight.model.database.MovieGenre;
 import com.example.MovieTonight.model.database.ProvidersInfo;
 import com.example.MovieTonight.services.implementations.ProviderInfoServiceImp;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 

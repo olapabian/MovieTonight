@@ -1,3 +1,4 @@
+/*
 package com.example.MovieTonight.model.others;
 
 import jakarta.persistence.Column;
@@ -19,4 +20,4 @@ public class ExampleTable {
     @Column(name = "name")
     private String name;
 
-}
+}*/

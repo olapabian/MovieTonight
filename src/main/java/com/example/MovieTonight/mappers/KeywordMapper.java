@@ -31,7 +31,7 @@ public class KeywordMapper {
             KeywordPoints kp = new KeywordPoints();
             kp.setKeywordId(keywordId);
             kp.setGenreId(kS.getGenreId());
-            kp.setGenreOccurrences(kS.getOccurrences());
+            kp.setPoints(kS.getOccurrences());
 
             resultList.add(kp);
         }

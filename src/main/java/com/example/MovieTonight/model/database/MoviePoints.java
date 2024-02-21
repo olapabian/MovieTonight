@@ -7,16 +7,16 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "keyword_points")
-public class KeywordPoints {
+@Table(name = "movie_points")
+public class MoviePoints {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "rowid", nullable = false)
     private Long id;
 
-    @Column(name = "keyword_id", nullable = false)
-    private Long keywordId;
+    @Column(name = "tmdb_id", nullable = false)
+    private Long tmdbId;
 
     @Column(name = "genre_id", nullable = false)
     private Long genreId;
