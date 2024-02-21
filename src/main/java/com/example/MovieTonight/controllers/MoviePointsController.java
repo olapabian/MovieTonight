@@ -45,7 +45,7 @@ public class MoviePointsController {
         List<Long> badLista = new ArrayList<>();
         badLista.add(53L);
 
-        return movieGenresRepository.moviesFromQuiz(goodLista, badLista);
+        return movieGenresRepository.moviesFromQuiz(goodLista, badLista); //xD
 
     }
 

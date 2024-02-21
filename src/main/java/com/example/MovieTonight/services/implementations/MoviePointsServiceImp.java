@@ -4,6 +4,7 @@ import com.example.MovieTonight.dataFromApi.MoviePointsStructure;
 import com.example.MovieTonight.model.database.MoviePoints;
 import com.example.MovieTonight.model.database.TmdbMovie;
 import com.example.MovieTonight.repository.*;
+import com.example.MovieTonight.services.interfaces.MoviePointsService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 @Service
 @AllArgsConstructor
-public class MoviePointsServiceImp {
+public class MoviePointsServiceImp implements MoviePointsService {
     TmdbMovieRepository tmdbMovieRepository;
     MovieKeywordRepository movieKeywordRepository;
     KeywordPointsRepository keywordPointsRepository;
@@ -22,9 +23,9 @@ public class MoviePointsServiceImp {
     public Long genrePointsForMovieFromKeywords(TmdbMovie tmdbId, Long genreId) {
 
         List<Long> genrePoints = moviePointsRepository.genrePointsForMovie(tmdbId, genreId);
-        long suma = genrePoints.stream().mapToLong(Long::longValue).sum();
+        long sum = genrePoints.stream().mapToLong(Long::longValue).sum();
 
-        return suma;
+        return sum;
 
     }
 
