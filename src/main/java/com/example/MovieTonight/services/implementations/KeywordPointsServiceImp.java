@@ -1,12 +1,10 @@
 package com.example.MovieTonight.services.implementations;
 
 import com.example.MovieTonight.dataFromApi.KeywordCount;
-import com.example.MovieTonight.model.database.GenresInfo;
 import com.example.MovieTonight.model.database.KeywordPoints;
 import com.example.MovieTonight.dataFromApi.KeywordStatistic;
-import com.example.MovieTonight.mappers.KeywordMapper;
+import com.example.MovieTonight.mappers.Mapper;
 import com.example.MovieTonight.model.database.KeywordsInfo;
-import com.example.MovieTonight.model.database.MovieGenre;
 import com.example.MovieTonight.repository.*;
 import com.example.MovieTonight.services.interfaces.KeywordPointsSerivce;
 import lombok.AllArgsConstructor;
@@ -14,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -27,7 +24,7 @@ public class KeywordPointsServiceImp implements KeywordPointsSerivce {
     KeywordsInfoRepository keywordsInfoRepository;
     KeywordPointsRepository keywordPointsRepository;
     GenresInfoRepository genresInfoRepository;
-    KeywordMapper keywordMapper;
+    Mapper mapper;
 
     public List<KeywordCount> getGenres(long keywordId) {
 
@@ -35,7 +32,7 @@ public class KeywordPointsServiceImp implements KeywordPointsSerivce {
         List<KeywordCount> keywordCounts = new ArrayList<>();
 
         for (Object[] result : queryResults) {
-            KeywordCount keywordCount = keywordMapper.mapFromObjectToKeywordCount(result);
+            KeywordCount keywordCount = mapper.mapFromObjectToKeywordCount(result);
             keywordCounts.add(keywordCount);
         }
 

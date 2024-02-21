@@ -19,4 +19,8 @@ public class GenresInfo {
     @Column(name = "name", length = Integer.MAX_VALUE)
     private String name;
 
+    @Override
+    public String toString() {
+        return name;
+    }
 }
