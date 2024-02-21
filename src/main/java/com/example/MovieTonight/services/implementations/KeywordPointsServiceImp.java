@@ -76,12 +76,8 @@ public class KeywordPointsServiceImp implements KeywordPointsSerivce {
             for(KeywordStatistic kS: keywordStatistic){
 
                 KeywordPoints kp = new KeywordPoints();
-
-                Optional<KeywordsInfo> keyword = keywordsInfoRepository.findById(keywordId);
-                kp.setKeywordId(keyword.get());
-
-                Optional<GenresInfo> genre = genresInfoRepository.findById(kS.getGenreId());
-                kp.setGenreId(genre.get());
+                kp.setKeywordId( keywordsInfoRepository.findById(keywordId).get());
+                kp.setGenreId(genresInfoRepository.findById(kS.getGenreId()).get());
 
                 kp.setPoints(kS.getOccurrences());
                 resultList.add(kp);

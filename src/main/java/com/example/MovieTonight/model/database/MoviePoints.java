@@ -15,11 +15,13 @@ public class MoviePoints {
     @Column(name = "rowid", nullable = false)
     private Long id;
 
-    @Column(name = "tmdb_id", nullable = false)
-    private Long tmdbId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "tmdb_id")
+    private TmdbMovie tmdbId;
 
-    @Column(name = "genre_id", nullable = false)
-    private Long genreId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "genre_id")
+    private GenresInfo genreId;
 
     @Column(name = "points", nullable = false)
     private Long points;

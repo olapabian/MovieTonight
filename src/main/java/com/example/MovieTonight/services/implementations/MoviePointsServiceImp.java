@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 @Service
 @AllArgsConstructor
 public class MoviePointsServiceImp implements MoviePointsService {
@@ -43,9 +45,10 @@ public class MoviePointsServiceImp implements MoviePointsService {
                 if(movieGenres.contains(genreId)){
                     points += 5000;
                 }
+
                 MoviePoints movie = new MoviePoints();
-                movie.setTmdbId(movieId);
-                movie.setGenreId(genreId);
+                movie.setTmdbId(tmdbMovieRepository.findById(movieId).get());
+                movie.setGenreId(genresInfoRepository.findById(genreId).get());
                 movie.setPoints(points);
                 moviePoints.add(movie);
             }
