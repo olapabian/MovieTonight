@@ -15,11 +15,13 @@ public class KeywordPoints {
     @Column(name = "rowid", nullable = false)
     private Long id;
 
-    @Column(name = "keyword_id", nullable = false)
-    private Long keywordId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "keyword_id")
+    private KeywordsInfo keywordId;
 
-    @Column(name = "genre_id", nullable = false)
-    private Long genreId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "genre_id")
+    private GenresInfo genreId;
 
     @Column(name = "points", nullable = false)
     private Long points;

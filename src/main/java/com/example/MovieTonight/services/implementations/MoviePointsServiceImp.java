@@ -15,7 +15,6 @@ import java.util.List;
 public class MoviePointsServiceImp implements MoviePointsService {
     TmdbMovieRepository tmdbMovieRepository;
     MovieKeywordRepository movieKeywordRepository;
-    KeywordPointsRepository keywordPointsRepository;
     MoviePointsRepository moviePointsRepository;
     GenresInfoRepository genresInfoRepository;
     MovieGenresRepository movieGenresRepository;

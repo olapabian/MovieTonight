@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public interface GenresInfoRepository extends JpaRepository<GenresInfo,Long> {
-    @Query("SELECT kp.points FROM MovieKeyword AS tm JOIN KeywordPoints AS kp ON tm.keyword.id = kp.keywordId WHERE tm.tmdb=?1 AND kp.genreId=?2")
+    @Query("SELECT kp.points FROM MovieKeyword AS tm JOIN KeywordPoints AS kp ON tm.keyword.id = kp.keywordId.id WHERE tm.tmdb=?1 AND kp.genreId.id=?2")
     List<Long> genrePointsForMovie(TmdbMovie tmdbId, Long genreId);
 
     @Query("SELECT id FROM GenresInfo")

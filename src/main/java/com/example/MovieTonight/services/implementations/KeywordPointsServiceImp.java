@@ -1,10 +1,12 @@
 package com.example.MovieTonight.services.implementations;
 
 import com.example.MovieTonight.dataFromApi.KeywordCount;
+import com.example.MovieTonight.model.database.GenresInfo;
 import com.example.MovieTonight.model.database.KeywordPoints;
 import com.example.MovieTonight.dataFromApi.KeywordStatistic;
 import com.example.MovieTonight.mappers.KeywordMapper;
 import com.example.MovieTonight.model.database.KeywordsInfo;
+import com.example.MovieTonight.model.database.MovieGenre;
 import com.example.MovieTonight.repository.*;
 import com.example.MovieTonight.services.interfaces.KeywordPointsSerivce;
 import lombok.AllArgsConstructor;
@@ -12,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 @Service
 @AllArgsConstructor
 public class KeywordPointsServiceImp implements KeywordPointsSerivce {
@@ -22,6 +26,7 @@ public class KeywordPointsServiceImp implements KeywordPointsSerivce {
     MovieKeywordRepository movieKeywordRepository;
     KeywordsInfoRepository keywordsInfoRepository;
     KeywordPointsRepository keywordPointsRepository;
+    GenresInfoRepository genresInfoRepository;
     KeywordMapper keywordMapper;
 
     public List<KeywordCount> getGenres(long keywordId) {
@@ -67,9 +72,20 @@ public class KeywordPointsServiceImp implements KeywordPointsSerivce {
                     keywordStatistic.add(newStatistic);
 
                 }
-
             }
-            resultList.addAll(keywordMapper.mapFromKeywordStatisticListToKeywordPoints(keywordId, keywordStatistic));
+            for(KeywordStatistic kS: keywordStatistic){
+
+                KeywordPoints kp = new KeywordPoints();
+
+                Optional<KeywordsInfo> keyword = keywordsInfoRepository.findById(keywordId);
+                kp.setKeywordId(keyword.get());
+
+                Optional<GenresInfo> genre = genresInfoRepository.findById(kS.getGenreId());
+                kp.setGenreId(genre.get());
+
+                kp.setPoints(kS.getOccurrences());
+                resultList.add(kp);
+            }
         }
         keywordPointsRepository.saveAll(resultList);
 

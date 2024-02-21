@@ -4,6 +4,7 @@ import com.example.MovieTonight.dataFromApi.KeywordCount;
 import com.example.MovieTonight.services.implementations.KeywordPointsServiceImp;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -34,5 +35,11 @@ public class KeywordPointsController {
         }
 
         return "Zapisano punkty keywordow";
+    }
+
+    @GetMapping("/dupa")
+    public List<KeywordCount> getMoviesFromQuiz(){
+        return keywordPointsServiceImp.getGenres(18L);
+
     }
 }

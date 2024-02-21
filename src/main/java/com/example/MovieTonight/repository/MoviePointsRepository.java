@@ -9,6 +9,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface MoviePointsRepository extends JpaRepository<MoviePoints,Long> {
-    @Query("SELECT kp.points FROM MovieKeyword AS tm JOIN KeywordPoints AS kp ON tm.keyword.id = kp.keywordId WHERE tm.tmdb=?1 AND kp.genreId=?2")
+    @Query("SELECT kp.points FROM MovieKeyword AS tm JOIN KeywordPoints AS kp ON tm.keyword.id = kp.keywordId.id WHERE tm.tmdb=?1 AND kp.genreId.id=?2")
     List<Long> genrePointsForMovie(TmdbMovie tmdbId, Long genreId);
 }
