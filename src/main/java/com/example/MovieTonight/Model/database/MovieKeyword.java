@@ -1,4 +1,4 @@
-package com.example.MovieTonight.Model;
+package com.example.MovieTonight.Model.database;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -7,19 +7,19 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "movie_rewards")
-public class MovieReward {
+@Table(name = "movie_keywords")
+public class MovieKeyword {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "rowid", nullable = false)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "filmweb_id")
-    private FilmwebMovie filmweb;
+    @JoinColumn(name = "keyword_id")
+    private KeywordsInfo keyword;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reward_id")
-    private RewardsInfo reward;
+    @JoinColumn(name = "tmdb_id")
+    private TmdbMovie tmdb;
 
 }

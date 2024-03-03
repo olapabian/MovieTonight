@@ -1,4 +1,4 @@
-package com.example.MovieTonight.Model;
+package com.example.MovieTonight.Model.database;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,10 +10,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "genres_info")
-public class GenresInfo {
+@Table(name = "rewards_info")
+public class RewardsInfo {
     @Id
-    @Column(name = "genre_id", nullable = false)
+    @Column(name = "reward_id", nullable = false)
     private Long id;
 
     @Column(name = "name", length = Integer.MAX_VALUE)

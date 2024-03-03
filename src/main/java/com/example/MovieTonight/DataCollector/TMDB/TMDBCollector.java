@@ -4,23 +4,23 @@ import com.example.MovieTonight.JSONs.TMDB.GsonMovie;
 import com.example.MovieTonight.JSONs.TMDB.KeywordsRequest;
 import com.example.MovieTonight.JSONs.TMDB.MovieDetails;
 import com.example.MovieTonight.JSONs.TMDB.MovieSearchResponse;
-import com.example.MovieTonight.Model.*;
+import com.example.MovieTonight.Model.database.*;
+import com.example.MovieTonight.Model.others.TmdbMovieAndMovie;
 import com.example.MovieTonight.Repository.*;
-import com.google.gson.JsonObject;
-import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import okhttp3.Response;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
 import com.google.gson.Gson;
+
+import java.util.ArrayList;
 
 @AllArgsConstructor
 @Service
@@ -37,9 +37,12 @@ public class TMDBCollector {
     private final KeywordsInfoRepository keywordsInfoRepository;
     private final FilmwebMovieRepository filmwebMovieRepository;
 
-    @PostConstruct
-    public void collect() throws FileNotFoundException {
+    //    @PostConstruct
+    public void collect() {
+        //leciec dopuki nie znajdzie danego id
 //        int ile = 0;
+//        boolean isStart=false; //jak mi sie przerwie i wtedy ustwaiam tam dalej jaki id
+        boolean isStart = true; //za pierwszym razme
         String filePath = "titles.txt";
         String filePath2 = "years.txt";
         String filePath3 = "filmwebIds.txt";
@@ -49,28 +52,47 @@ public class TMDBCollector {
             String line;
             String year;
             String filmwebId;
+            List<TmdbMovie> tmdbMovieList = new ArrayList<>();
+            List<Movie> movieList = new ArrayList<>();
             while ((line = br.readLine()) != null && (year = br2.readLine()) != null && (filmwebId = br3.readLine()) != null) {
-                saveTmdb(line, year, filmwebId); //tabela filmwebMovies
-                System.out.println(line);
+                System.out.println(filmwebId);
+                if (isStart) {
+                    Movie movie = saveTmdb(line, year, filmwebId); //tabela filmwebMovies
+
+                    //dodaje do list
+                    if (movie != null) {
+                        movieList.add(movie);
+                    }
+                    System.out.println(line);
+                }
+//                if(filmwebId.equals("1"))
+//                {
+//                    isStart=true;
+//                }
 //                ile++;
 //                System.out.println(ile);
             }
+            movieRepository.saveAll(movieList);
         } catch (IOException e) {
             e.printStackTrace(); // Handle the exception according to your application's needs
         }
         System.out.println("pobrano dane TMDB");
     }
+
     @Transactional
-    public void saveTmdb(String title, String year, String filmwebId) throws IOException {
-        try{
+    public Movie saveTmdb(String title, String year, String filmwebId) throws IOException {
+        TmdbMovieAndMovie tmdbMovieAndMovie = new TmdbMovieAndMovie();
+        Movie movie = null;
+        try {
+
             Optional<FilmwebMovie> filmwebMovie = filmwebMovieRepository.findById(Long.parseLong(filmwebId));
-            if(filmwebMovie.isPresent()){
+
+            if (filmwebMovie.isPresent()) {
                 FilmwebMovie filmwebMovie1 = filmwebMovie.get();
-                Movie movie = movieRepository.findByFilmweb(filmwebMovie1);
+                movie = movieRepository.findByFilmweb(filmwebMovie1);
                 TmdbMovie tmdbMovie = new TmdbMovie();
                 tmdbMovie.setId(1L);
 
-                //Request search
                 String url = "https://api.themoviedb.org/3/search/movie?api_key=&query=" + title;
                 ApiCollector apiCollector = new ApiCollector();
                 Response response = apiCollector.collect(url);
@@ -89,7 +111,6 @@ public class TMDBCollector {
                                     //TMDB Id
                                     tmdbMovie.setId(gsonMovie.getId());
                                     System.out.println(gsonMovie.getTitle());
-
                                     break;
                                 }
                             }
@@ -102,25 +123,8 @@ public class TMDBCollector {
                 }
                 response.body().close();
 
-                //Jeśli nie znajdziemy dokładnego tytułu to dajemy pierwszy z listy film( przypadek np.Episode V - The Empire Strikes Back w tmdb nazywa sie The Empire Strikes Back) i tmdb nie używa polskich znaków czasami i chłopaki nie płaczą to u nich Chlopaki nie placza
-                String url3 = "https://api.themoviedb.org/3/search/movie?api_key=&query=" + title;
-                ApiCollector apiCollector3 = new ApiCollector();
-                Response response3 = apiCollector3.collect(url);
-                if (tmdbMovie.getId() == 1L) {
-                    if (response3.isSuccessful()) {
-                        String jsonResponse3 = response3.body().string();
 
-                        if (jsonResponse3 != null && !jsonResponse3.isEmpty()) {
-                            Gson gson = new Gson();
-                            MovieSearchResponse movieSearchResponse = gson.fromJson(jsonResponse3, MovieSearchResponse.class);
-                            GsonMovie gsonMovie = movieSearchResponse.getResults().get(0);
-                            tmdbMovie.setId(gsonMovie.getId());
-                            System.out.println(gsonMovie.getTitle());
-                        }
-                    }
-                }
-                response3.body().close();
-
+                System.out.println("znaleziono film");
                 //Request with many informations
                 String url1 = "https://api.themoviedb.org/3/movie/" + String.valueOf(tmdbMovie.getId()) + "?append_to_response=credits&language=pl-PL";
                 ApiCollector apiCollector1 = new ApiCollector();
@@ -146,7 +150,10 @@ public class TMDBCollector {
 
                         //Popularity tmdbMovie
                         tmdbMovie.setPopularity(movieDetails.getPopularity());
+
+                        //tu jest SAVE
                         tmdbMovieRepository.save(tmdbMovie);
+
 
                         //Pętla po crew (zapisywanie rezystero
                         for (int i = 0; i < movieDetails.getCredits().getCrew().size(); ++i) {
@@ -167,6 +174,9 @@ public class TMDBCollector {
                             }
 
                         }
+
+                        System.out.println("pobrano rezyserow");
+
                         //Pętla po cast ( zapisywanie  aktorów)
                         for (int i = 0; i < movieDetails.getCredits().getCast().size(); ++i) {
                             if (movieDetails.getCredits().getCast().get(i).getKnownForDepartment().equals("Acting")) {
@@ -184,7 +194,11 @@ public class TMDBCollector {
 
                             }
                         }
+
+                        System.out.println("pobrano aktorow");
+
                         //Pętla po genres zapisywanie wszystkich gatunkto pojedynczo
+
                         for (int i = 0; i < movieDetails.getGenres().size(); ++i) {
 
                             GenresInfo genresInfo = new GenresInfo();
@@ -195,10 +209,11 @@ public class TMDBCollector {
                             MovieGenre movieGenre = new MovieGenre();
                             movieGenre.setGenre(genresInfo);
                             movieGenre.setTmdbMovie(tmdbMovie);
+
                             genresInfoRepository.save(genresInfo);
                             movieGenresRepository.save(movieGenre);
-
                         }
+                        System.out.println("pobrano gatunki");
 
                     }
                 }
@@ -213,34 +228,42 @@ public class TMDBCollector {
                     if (jsonResponse1 != null && !jsonResponse1.isEmpty()) {
                         Gson gson = new Gson();
                         KeywordsRequest keywordsRequest = gson.fromJson(jsonResponse1, KeywordsRequest.class);
+
+                        List<KeywordsInfo> keywordsInfoList = new ArrayList<>();
+                        List<MovieKeyword> movieKeywordList = new ArrayList<>();
                         for (int i = 0; i < keywordsRequest.getKeywords().size(); ++i) {
 
                             KeywordsInfo keywordsInfo = new KeywordsInfo();
                             keywordsInfo.setId(keywordsRequest.getKeywords().get(i).getId());
                             keywordsInfo.setName(keywordsRequest.getKeywords().get(i).getName());
+
                             keywordsInfoRepository.save(keywordsInfo);
 
                             MovieKeyword movieKeyword = new MovieKeyword();
                             movieKeyword.setTmdb(tmdbMovie);
                             movieKeyword.setKeyword(keywordsInfo);
+
                             movieKeywordRepository.save(movieKeyword);
                         }
+
+
                     }
                 }
+                System.out.println("pobrano keywords");
                 response4.body().close();
                 movie.setTmdb(tmdbMovie);
-                movieRepository.save(movie);
+
+                //i tu jest SAVE
+//                    movieRepository.save(movie);
 
             }
 
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
-            saveTmdb(title,year,filmwebId);
+            saveTmdb(title, year, filmwebId);
         }
-
-        }
-
+        return movie;
+    }
 }
 
 

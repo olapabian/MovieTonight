@@ -1,19 +1,23 @@
-package com.example.MovieTonight.Model;
+package com.example.MovieTonight.Model.database;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "actors_info")
-public class ActorsInfo {
+@Table(name = "directors_info")
+@AllArgsConstructor
+@NoArgsConstructor
+public class DirectorsInfo {
     @Id
-    @Column(name = "actor_id", nullable = false)
+    @Column(name = "director_id", nullable = false)
     private Long id;
 
     @Column(name = "full_name", length = Integer.MAX_VALUE)

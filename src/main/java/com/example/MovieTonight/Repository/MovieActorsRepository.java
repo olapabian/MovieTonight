@@ -1,6 +1,6 @@
 package com.example.MovieTonight.Repository;
 
-import com.example.MovieTonight.Model.MovieActor;
+import com.example.MovieTonight.Model.database.MovieActor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

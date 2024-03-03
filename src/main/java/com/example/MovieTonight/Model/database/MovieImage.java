@@ -1,5 +1,6 @@
-package com.example.MovieTonight.Model;
+package com.example.MovieTonight.Model.database;
 
+import com.example.MovieTonight.Model.database.Movie;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
