@@ -35,7 +35,7 @@ IdAndTitleCollector {
         List<Thread> threads = new ArrayList<>();
 
         try (FileWriter writer = new FileWriter("thread_logs.txt")) {
-            for (int i = 8; i < 9; i++) {
+            for (int i = 0; i < 9; i++) {
                 final int number = i;
                 int from = number * 100000; // Początek zakresu dla danego wątku
                 int to = (number + 1) * 100000; // Koniec zakresu dla danego wątku
