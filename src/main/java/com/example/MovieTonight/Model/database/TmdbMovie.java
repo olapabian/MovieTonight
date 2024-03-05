@@ -28,4 +28,7 @@ public class TmdbMovie {
     @Column(name = "popularity")
     private Double popularity;
 
+    @Column(name = "is_adult")
+    private boolean isAdult;
+
 }

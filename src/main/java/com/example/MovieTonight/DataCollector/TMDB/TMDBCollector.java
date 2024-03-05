@@ -38,14 +38,11 @@ public class TMDBCollector {
     private final FilmwebMovieRepository filmwebMovieRepository;
 
     //    @PostConstruct
-    public void collect() {
+    public void collect(String filePath, String filePath2, String filePath3) {
         //leciec dopuki nie znajdzie danego id
 //        int ile = 0;
 //        boolean isStart=false; //jak mi sie przerwie i wtedy ustwaiam tam dalej jaki id
         boolean isStart = true; //za pierwszym razme
-        String filePath = "titles.txt";
-        String filePath2 = "years.txt";
-        String filePath3 = "filmwebIds.txt";
         try (BufferedReader br = new BufferedReader(new FileReader(filePath));
              BufferedReader br2 = new BufferedReader(new FileReader(filePath2));
              BufferedReader br3 = new BufferedReader(new FileReader(filePath3))) {
@@ -76,7 +73,7 @@ public class TMDBCollector {
         } catch (IOException e) {
             e.printStackTrace(); // Handle the exception according to your application's needs
         }
-        System.out.println("pobrano dane TMDB");
+        System.out.println("pobrano dane TMDB" + filePath3);
     }
 
     @Transactional
@@ -111,6 +108,7 @@ public class TMDBCollector {
                                     //TMDB Id
                                     tmdbMovie.setId(gsonMovie.getId());
                                     System.out.println(gsonMovie.getTitle());
+                                    tmdbMovie.setAdult(gsonMovie.isAdult());
                                     break;
                                 }
                             }
@@ -259,7 +257,7 @@ public class TMDBCollector {
             }
 
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println("wylapalo wyjatek" + e.getMessage());
             saveTmdb(title, year, filmwebId);
         }
         return movie;

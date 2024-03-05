@@ -10,7 +10,10 @@ import com.example.MovieTonight.Model.others.InfoAndBool;
 import com.google.gson.Gson;
 import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import okhttp3.Response;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedWriter;
@@ -18,25 +21,57 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
-@AllArgsConstructor
 public class
 IdAndTitleCollector {
+
+    private int ile;
+
     @PostConstruct
     public void collect() {
-        int from = 0;
-        int to = 10;
+        List<Thread> threads = new ArrayList<>();
 
-        for (int number = 0; number < 10; ++number) {
-            collectPart(from, to, String.valueOf(number));
-//            from += 100000;
-//            to += 100000;
-            from += 10;
-            to += 10;
+        try (FileWriter writer = new FileWriter("thread_logs.txt")) {
+            for (int i = 8; i < 9; i++) {
+                final int number = i;
+                int from = number * 100000; // Początek zakresu dla danego wątku
+                int to = (number + 1) * 100000; // Koniec zakresu dla danego wątku
+                Thread thread = new Thread(() -> {
+                    collectPart(from, to, String.valueOf(number));
+                    // Zapisz informację o zakończeniu wątku do pliku
+                    try {
+                        writer.write("Wątek " + number + " zakończony.\n");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+                thread.start();
+                threads.add(thread);
+            }
+
+            // Czekaj na zakończenie wszystkich wątków
+            for (Thread thread : threads) {
+                try {
+                    thread.join(); // Czekaj na zakończenie wątku
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            writer.write("Wszystkie wątki zakończone.\n");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
+        System.out.println("Wszystkie wątki zakończone.");
+        System.out.println(ile);
+
     }
+
+
 
     public void collectPart(int from, int to, String number) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("filmwebIDs" + number + ".txt"));
@@ -104,6 +139,7 @@ IdAndTitleCollector {
                         }
                         yearWriter.write(String.valueOf(infoAndBool.getInfoRequest().getYear()));
                         yearWriter.newLine();
+                        ile++;
                     } else {
                         System.out.println("nie znaleziono tego filmu w tmdb ");
                     }
@@ -142,13 +178,13 @@ IdAndTitleCollector {
                 return infoAndBool;
             }
 
-            if (Rating < 5.0) {
-                System.out.println("oceny wykluczyły film");
-                infoAndBool.setFlag(false);
-                return infoAndBool;
-            }
+//            if (Rating < 4.0) {
+//                System.out.println("oceny wykluczyły film");
+//                infoAndBool.setFlag(false);
+//                return infoAndBool;
+//            }
 
-            if (ratingRequest.getCount() == null || ratingRequest.getCount().longValue() < 2000) {
+            if (ratingRequest.getCount() == null || ratingRequest.getCount().longValue() < 400) {
                 System.out.println("oceny wykluczyły film");
                 infoAndBool.setFlag(false);
                 return infoAndBool;

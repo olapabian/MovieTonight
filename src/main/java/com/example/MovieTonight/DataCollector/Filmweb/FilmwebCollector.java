@@ -35,11 +35,9 @@ public class FilmwebCollector {
     private final MovieProvidersRepository movieProvidersRepository;
 //    @PostConstruct // sie uruchomi po starcie apki
 
-    public void filmwebCollect() throws IOException {
+    public void filmwebCollect(String filePath ) throws IOException {
 
-//        collectProvidersInfo(); //lista wszystkich providers
 
-        String filePath = "filmwebIds.txt";
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
             List<Movie> movieList = new ArrayList<>();
@@ -54,17 +52,26 @@ public class FilmwebCollector {
                 //dodanie do listy movie
                 movieList.add(filmwebMovieAndMovie.getMovie());
 
-
-                collectMovieProviders(line); //dla kazdego filmu liste providers
             }
             //zapisanie wszystkich filmow
             filmwebMovieRepository.saveAll(filmwebMovieList);
             movieRepository.saveAll(movieList);
+
         } catch (IOException e) {
             e.printStackTrace(); // Handle the exception according to your application's needs
         }
 
-        System.out.println("pobrano dane");
+        //pobranie polaczen z providers
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                collectMovieProviders(line); //dla kazdego filmu liste providers
+            }
+        } catch (IOException e) {
+            e.printStackTrace(); // Handle the exception according to your application's needs
+        }
+
+        System.out.println("pobrano dane " + filePath);
     }
     @Transactional
     public FilmwebMovieAndMovie collectMovie(String filmwebId) throws IOException {
@@ -82,7 +89,7 @@ public class FilmwebCollector {
                 String response = String.valueOf(httpCollector.getResponse());
                 Gson gson = new Gson();
                 InfoRequest infoRequest = gson.fromJson(response, InfoRequest.class);
-                System.out.println(filmwebId);
+                System.out.println("filmwebID" + filmwebId);
                 //title to movie
                 String titleAsString = String.valueOf(infoRequest.getTitle());
                 movie.setTitle(titleAsString);
@@ -97,6 +104,7 @@ public class FilmwebCollector {
                 // release date
                 Long releaseDateAsLong = Long.valueOf(infoRequest.getYear());
                 filmwebMovie.setReleaseDate(releaseDateAsLong);
+                System.out.println("pobrano info" + infoRequest.getTitle());
             }
 
             URL url1 = new URL("https://www.filmweb.pl/api/v1/film/" + filmwebId + "/rating");
@@ -130,7 +138,9 @@ public class FilmwebCollector {
             System.out.println(e);
             collectMovie(filmwebId);
         }
+        System.out.println("pobrano rating");
         return filmwebMovieAndMovie;
+
     }
     @Transactional
     public void collectProvidersInfo() throws IOException {
