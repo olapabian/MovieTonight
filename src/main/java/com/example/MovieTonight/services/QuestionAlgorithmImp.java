@@ -1,8 +1,11 @@
 package com.example.MovieTonight.services;
 
-import com.example.MovieTonight.algorithm.QuestionForQuiz;
+import com.example.MovieTonight.algorithm.*;
 import com.example.MovieTonight.model.Question;
+import com.example.MovieTonight.model.QuizResults;
 import com.example.MovieTonight.repository.QuestionAlgorithmRepository;
+import com.example.MovieTonight.repository.QuizResultsRepository;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.stereotype.Service;
 
@@ -12,18 +15,19 @@ import java.util.List;
 
 @Service
 @Getter
+@AllArgsConstructor
 public class QuestionAlgorithmImp {
-
     QuestionAlgorithmRepository questionAlgorithmRepository;
+    QuizResultsRepository quizResultsRepository;
+    AlgorithmServiceImp algorithmServiceImp;
 
-    public QuestionAlgorithmImp(QuestionAlgorithmRepository questionAlgorithmRepository) {
-        this.questionAlgorithmRepository = questionAlgorithmRepository;
-    }
-
-    public List<QuestionForQuiz> getStartingQuestions(){
+    public QuestionsResponse getStartingQuestions(){
         List<QuestionForQuiz> startingQuestions = new ArrayList<>();
+        Long quizId = questionAlgorithmRepository.getQuizId();
+        QuizResults quizResults = new QuizResults();
+        quizResults.setQuizId(quizId);
+        quizResultsRepository.save(quizResults);
 
-        //chwilowo zhardcodowałem odpowiedzi do startowych pytań
         List<String> sideAnswers = new ArrayList<>();
         sideAnswers.add("Ciemna");
         sideAnswers.add("Jasna");
@@ -41,17 +45,20 @@ public class QuestionAlgorithmImp {
         startingQuestions.add(new QuestionForQuiz(questionAlgorithmRepository.getTimeQuestion(),timeAnswers));
         startingQuestions.add(new QuestionForQuiz(questionAlgorithmRepository.getRelaseDateQuestion(),relaseDateAnswers));
 
-        return startingQuestions;
+        QuestionsResponse questionsResponse = new QuestionsResponse(quizId, startingQuestions);
+
+        return questionsResponse;
     }
 
-    public List<QuestionForQuiz> getGenreQuestions(int quizId, int userId, String side, String time, String relaseDate){
-        //tu zapisywanie odpowiedzi do bazy danych ale chwilowo to pomijam
+    public QuestionsResponse getGenreQuestions(GenreQuestionsRequest genreQuestionsRequest){
+        this.saveStartingAnswers(genreQuestionsRequest);
 
+        int amount = 4;
         List<QuestionForQuiz> genreQuestions = new ArrayList<>();
-        List<Question> genreQuestionsTemp = questionAlgorithmRepository.getGenreQuestions(4);
+        List<Question> genreQuestionsTemp = questionAlgorithmRepository.getGenreQuestions(amount);
         List<String> answers = new ArrayList<>();
 
-        if(side.equals("Ciemna")){
+        if(genreQuestionsRequest.getSide().equals("Jasna")){
             answers.addAll(List.of("Romans", "Animacja", "Familyjny", "Komedia", "Muzyczny", "Fantasy", "Sci-Fi",
                     "Western", "Historyczny", "Akcja", "Dokumentalny", "Przygodowy"));
 
@@ -66,23 +73,79 @@ public class QuestionAlgorithmImp {
             genreQuestions.add(new QuestionForQuiz((genreQuestionsTemp.get(i)), List.of(answers.get(i), answers.get(answers.size()-(i+1)))));
         }
 
+        QuestionsResponse questionsResponse = new QuestionsResponse(genreQuestionsRequest.getQuizId(), genreQuestions);
 
-        return genreQuestions;
+        return questionsResponse;
     }
 
-    public List<QuestionForQuiz> getKeywordQuestions(int quizId, int userId, List<String> wantedGenres, List<String> unwantedGenres){
-        //tu zapisywanie odpowiedzi do bazy danych ale chwilowo to pomijam
+    public QuestionsResponse getKeywordQuestions(KeywordQuestionsRequest keywordQuestionsRequest){
+        this.saveGenreAnswers(keywordQuestionsRequest);
 
-        List<QuestionForQuiz> keywordQuestions = new ArrayList<>();
         int amount = 5;
+        List<QuestionForQuiz> keywordQuestions = new ArrayList<>();
         List<Question> keywordQuestionsTemp = questionAlgorithmRepository.getKeywordQuestions(amount);
-        List<String> answers = questionAlgorithmRepository.getKeywordsForQuestions(wantedGenres, unwantedGenres, 2*amount);
+        List<String> answers = questionAlgorithmRepository.getKeywordsForQuestions(keywordQuestionsRequest.getWantedGenres(),
+                keywordQuestionsRequest.getUnwantedGenres(), 2*amount);
+
         Collections.shuffle(answers);
 
         for(int i = 0; i < keywordQuestionsTemp.size(); i++){
             keywordQuestions.add(new QuestionForQuiz((keywordQuestionsTemp.get(i)), List.of(answers.get(i), answers.get(answers.size()-(i+1)))));
         }
 
-        return keywordQuestions;
+        QuestionsResponse questionsResponse = new QuestionsResponse(keywordQuestionsRequest.getQuizId(), keywordQuestions);
+
+        return questionsResponse;
+    }
+
+    public List<UserMovie> getMovieRecommendations(MovieRecommendationRequest movieRecommendationRequest){
+        this.saveKeywordAnswers(movieRecommendationRequest);
+
+        return algorithmServiceImp.getRecommendationV2();
+    }
+
+    void saveStartingAnswers(GenreQuestionsRequest genreQuestionsRequest){
+        QuizResults sideResult = new QuizResults(genreQuestionsRequest.getQuizId(), genreQuestionsRequest.getUserId(),
+                "Side", genreQuestionsRequest.getSide(), "positive");
+
+        QuizResults timeResult = new QuizResults(genreQuestionsRequest.getQuizId(), genreQuestionsRequest.getUserId(),
+                "Time", genreQuestionsRequest.getTime(), "positive");
+
+        QuizResults releaseDateResult = new QuizResults(genreQuestionsRequest.getQuizId(), genreQuestionsRequest.getUserId(),
+                "ReleaseDate", genreQuestionsRequest.getReleaseDate(), "positive");
+
+        List<QuizResults> listToSave = new ArrayList<>(List.of(sideResult, timeResult, releaseDateResult));
+
+        quizResultsRepository.saveAll(listToSave);
+    }
+
+    void saveGenreAnswers(KeywordQuestionsRequest keywordQuestionsRequest){
+        List<String> wantedGenresId = questionAlgorithmRepository.getGenresId(keywordQuestionsRequest.getWantedGenres());
+        List<String> unwantedGenresId = questionAlgorithmRepository.getGenresId(keywordQuestionsRequest.getUnwantedGenres());
+        List<QuizResults> listToSave = new ArrayList<>();
+
+        for(String genreId : wantedGenresId){
+            listToSave.add(new QuizResults(keywordQuestionsRequest.getQuizId(), keywordQuestionsRequest.getUserId(),
+                    "Genre", genreId, "positive"));
+        }
+
+        for(String genreId : unwantedGenresId){
+            listToSave.add(new QuizResults(keywordQuestionsRequest.getQuizId(), keywordQuestionsRequest.getUserId(),
+                    "Genre", genreId, "negative"));
+        }
+
+        quizResultsRepository.saveAll(listToSave);
+    }
+
+    void saveKeywordAnswers(MovieRecommendationRequest movieRecommendationRequest){
+        List<String> keywords = questionAlgorithmRepository.getKeywordsId(movieRecommendationRequest.getKeywords());
+        List<QuizResults> listToSave = new ArrayList<>();
+
+        for(String keywordId : keywords){
+            listToSave.add(new QuizResults(movieRecommendationRequest.getQuizId(), movieRecommendationRequest.getUserId(),
+                    "Keyword", keywordId, "positive"));
+        }
+
+        quizResultsRepository.saveAll(listToSave);
     }
 }

@@ -1,10 +1,9 @@
 package com.example.MovieTonight.controllers;
 
-import com.example.MovieTonight.algorithm.QuestionForQuiz;
+import com.example.MovieTonight.algorithm.*;
 import com.example.MovieTonight.services.QuestionAlgorithmImp;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -17,20 +16,22 @@ public class QuestionAlgorithmController {
     }
 
     @GetMapping("getStartingQuestions")
-    public List<QuestionForQuiz> getStartingQuestions(){
+    public QuestionsResponse getStartingQuestions(){
         return this.questionAlgorithmImp.getStartingQuestions();
     }
 
     @GetMapping("getGenreQuestions")
-    public List<QuestionForQuiz> getGenreQuestions(String quizId, String userId, String side, String time, String relaseDate){
-        return this.questionAlgorithmImp.getGenreQuestions(Integer.parseInt(quizId), Integer.parseInt(userId), side, time, relaseDate);
+    public QuestionsResponse getGenreQuestions(GenreQuestionsRequest genreQuestionsRequest){
+        return this.questionAlgorithmImp.getGenreQuestions(genreQuestionsRequest);
     }
 
     @GetMapping("getKeywordQuestions")
-    public List<QuestionForQuiz> getKeywordQuestions(@RequestParam String quizId,
-                                                    @RequestParam String userId,
-                                                    @RequestParam List<String> wantedGenres,
-                                                    @RequestParam List<String> unwantedGenres){
-        return this.questionAlgorithmImp.getKeywordQuestions(Integer.parseInt(quizId), Integer.parseInt(userId), wantedGenres, unwantedGenres);
+    public QuestionsResponse getKeywordQuestions(KeywordQuestionsRequest keywordQuestionsRequest){
+        return this.questionAlgorithmImp.getKeywordQuestions(keywordQuestionsRequest);
+    }
+
+    @GetMapping("getMovieRecommendations")
+    public List<UserMovie> getMovieRecommendations(MovieRecommendationRequest movieRecommendationRequest){
+        return this.questionAlgorithmImp.getMovieRecommendations(movieRecommendationRequest);
     }
 }
