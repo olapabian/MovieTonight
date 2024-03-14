@@ -8,12 +8,7 @@ import com.example.MovieTonight.JSONs.TMDB.GsonMovie;
 import com.example.MovieTonight.JSONs.TMDB.MovieSearchResponse;
 import com.example.MovieTonight.Model.others.InfoAndBool;
 import com.google.gson.Gson;
-import jakarta.annotation.PostConstruct;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
 import okhttp3.Response;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedWriter;
@@ -30,45 +25,48 @@ IdAndTitleCollector {
 
     private int ile;
 
-    @PostConstruct
-    public void collect() {
-        List<Thread> threads = new ArrayList<>();
+    //    @PostConstruct
+    public void collect(boolean is_test) {
+        if (!is_test) {
+            List<Thread> threads = new ArrayList<>();
 
-        try (FileWriter writer = new FileWriter("thread_logs.txt")) {
-            for (int i = 0; i < 9; i++) {
-                final int number = i;
-                int from = number * 100000; // Początek zakresu dla danego wątku
-                int to = (number + 1) * 100000; // Koniec zakresu dla danego wątku
-                Thread thread = new Thread(() -> {
-                    collectPart(from, to, String.valueOf(number));
-                    // Zapisz informację o zakończeniu wątku do pliku
+            try (FileWriter writer = new FileWriter("thread_logs.txt")) {
+                for (int i = 0; i < 9; i++) {
+                    final int number = i;
+                    int from = number * 100000; // Początek zakresu dla danego wątku
+                    int to = (number + 1) * 100000; // Koniec zakresu dla danego wątku
+                    Thread thread = new Thread(() -> {
+                        collectPart(from, to, String.valueOf(number));
+                        // Zapisz informację o zakończeniu wątku do pliku
+                        try {
+                            writer.write("Wątek " + number + " zakończony.\n");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                    thread.start();
+                    threads.add(thread);
+                }
+
+                // Czekaj na zakończenie wszystkich wątków
+                for (Thread thread : threads) {
                     try {
-                        writer.write("Wątek " + number + " zakończony.\n");
-                    } catch (IOException e) {
+                        thread.join(); // Czekaj na zakończenie wątku
+                    } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                });
-                thread.start();
-                threads.add(thread);
-            }
-
-            // Czekaj na zakończenie wszystkich wątków
-            for (Thread thread : threads) {
-                try {
-                    thread.join(); // Czekaj na zakończenie wątku
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
                 }
+
+                writer.write("Wszystkie wątki zakończone.\n");
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
-            writer.write("Wszystkie wątki zakończone.\n");
-        } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Wszystkie wątki zakończone.");
+            System.out.println(ile);
+        } else {
+            System.out.println("id and title collector włącza sie");
         }
-
-        System.out.println("Wszystkie wątki zakończone.");
-        System.out.println(ile);
-
     }
 
 
@@ -93,7 +91,7 @@ IdAndTitleCollector {
                     if (infoAndBool.getInfoRequest().getOriginalTitle() != null && !infoAndBool.getInfoRequest().getOriginalTitle().isEmpty()) {
                         title = infoAndBool.getInfoRequest().getOriginalTitle();
                     } else {
-                        infoAndBool.getInfoRequest().getTitle();
+                        title = infoAndBool.getInfoRequest().getTitle();
                     }
                     String url = "https://api.themoviedb.org/3/search/movie?api_key=&query=" + title;
                     ApiCollector apiCollector = new ApiCollector();
@@ -184,7 +182,7 @@ IdAndTitleCollector {
 //                return infoAndBool;
 //            }
 
-            if (ratingRequest.getCount() == null || ratingRequest.getCount().longValue() < 400) {
+            if (ratingRequest.getCount() == null || ratingRequest.getCount().longValue() < 200) {
                 System.out.println("oceny wykluczyły film");
                 infoAndBool.setFlag(false);
                 return infoAndBool;

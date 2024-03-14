@@ -35,43 +35,52 @@ public class FilmwebCollector {
     private final MovieProvidersRepository movieProvidersRepository;
 //    @PostConstruct // sie uruchomi po starcie apki
 
-    public void filmwebCollect(String filePath ) throws IOException {
+    public void filmwebCollect(String filePath, boolean is_test) throws IOException {
+
+        if (!is_test) {
+            try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+                String line;
 
 
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            List<Movie> movieList = new ArrayList<>();
-            List<FilmwebMovie> filmwebMovieList = new ArrayList<>();
-            while ((line = br.readLine()) != null) {
-                //wywolanie funkjci ktora zwraca obiekt
-                FilmwebMovieAndMovie filmwebMovieAndMovie = collectMovie(line); //movie and filmwebMovies
+                List<Movie> movieList = new ArrayList<>();
+                List<FilmwebMovie> filmwebMovieList = new ArrayList<>();
+                while ((line = br.readLine()) != null) {
+                    //wywolanie funkjci ktora zwraca obiekt
+                    FilmwebMovieAndMovie filmwebMovieAndMovie = collectMovie(line); //movie and filmwebMovies
 
-                //dodanie do listy filmwebmovie
-                filmwebMovieList.add(filmwebMovieAndMovie.getFilmwebMovie());
+                    //dodanie do listy filmwebmovie
+                    filmwebMovieList.add(filmwebMovieAndMovie.getFilmwebMovie());
 
-                //dodanie do listy movie
-                movieList.add(filmwebMovieAndMovie.getMovie());
+                    //dodanie do listy movie
+                    movieList.add(filmwebMovieAndMovie.getMovie());
 
+                }
+                //zapisanie wszystkich filmow
+
+                filmwebMovieRepository.saveAll(filmwebMovieList);
+                System.out.println("pobrano do filmweb_movie");
+                movieRepository.saveAll(movieList);
+                System.out.println("pobrano do movie");
+
+            } catch (IOException e) {
+                e.printStackTrace(); // Handle the exception according to your application's needs
             }
-            //zapisanie wszystkich filmow
-            filmwebMovieRepository.saveAll(filmwebMovieList);
-            movieRepository.saveAll(movieList);
 
-        } catch (IOException e) {
-            e.printStackTrace(); // Handle the exception according to your application's needs
+            //pobranie polaczen z providers
+            try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    collectMovieProviders(line); //dla kazdego filmu liste providers
+                }
+            } catch (IOException e) {
+                e.printStackTrace(); // Handle the exception according to your application's needs
+            }
+
+            System.out.println("pobrano dane " + filePath);
+        } else {
+            System.out.println("filmweb collector dziala ");
         }
 
-        //pobranie polaczen z providers
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                collectMovieProviders(line); //dla kazdego filmu liste providers
-            }
-        } catch (IOException e) {
-            e.printStackTrace(); // Handle the exception according to your application's needs
-        }
-
-        System.out.println("pobrano dane " + filePath);
     }
     @Transactional
     public FilmwebMovieAndMovie collectMovie(String filmwebId) throws IOException {
@@ -143,8 +152,9 @@ public class FilmwebCollector {
 
     }
     @Transactional
-    public void collectProvidersInfo() throws IOException {
-        try{
+    public void collectProvidersInfo(boolean is_test) throws IOException {
+        if (!is_test) {
+
             List<ProvidersInfo> providersInfoList = new ArrayList<>();
             URL url = new URL("https://www.filmweb.pl/api/v1/vod/providers/list");
             HttpCollector httpCollector = new HttpCollector(url);
@@ -162,10 +172,9 @@ public class FilmwebCollector {
                 }
                 providersInfoRepository.saveAll(providersInfoList);
             }
-        }catch (Exception e)
-        {
-            System.out.println(e);
-            collectProvidersInfo();
+
+        } else {
+            System.out.println("collect providers dziala");
         }
 
     }

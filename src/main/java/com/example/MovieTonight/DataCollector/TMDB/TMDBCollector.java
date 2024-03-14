@@ -7,6 +7,7 @@ import com.example.MovieTonight.JSONs.TMDB.MovieSearchResponse;
 import com.example.MovieTonight.Model.database.*;
 import com.example.MovieTonight.Model.others.TmdbMovieAndMovie;
 import com.example.MovieTonight.Repository.*;
+import com.google.gson.Gson;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import okhttp3.Response;
@@ -15,12 +16,9 @@ import org.springframework.stereotype.Service;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import com.google.gson.Gson;
-
-import java.util.ArrayList;
 
 @AllArgsConstructor
 @Service
@@ -38,44 +36,107 @@ public class TMDBCollector {
     private final FilmwebMovieRepository filmwebMovieRepository;
 
     //    @PostConstruct
-    public void collect(String filePath, String filePath2, String filePath3) {
-        //leciec dopuki nie znajdzie danego id
-//        int ile = 0;
-//        boolean isStart=false; //jak mi sie przerwie i wtedy ustwaiam tam dalej jaki id
-        boolean isStart = true; //za pierwszym razme
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath));
-             BufferedReader br2 = new BufferedReader(new FileReader(filePath2));
-             BufferedReader br3 = new BufferedReader(new FileReader(filePath3))) {
-            String line;
-            String year;
-            String filmwebId;
-            List<TmdbMovie> tmdbMovieList = new ArrayList<>();
-            List<Movie> movieList = new ArrayList<>();
-            while ((line = br.readLine()) != null && (year = br2.readLine()) != null && (filmwebId = br3.readLine()) != null) {
-                System.out.println(filmwebId);
-                if (isStart) {
-                    Movie movie = saveTmdb(line, year, filmwebId); //tabela filmwebMovies
+    public void collect(String filePath, String filePath2, String filePath3, boolean is_test, int startId) {
 
-                    //dodaje do list
-                    if (movie != null) {
-                        movieList.add(movie);
-                    }
-                    System.out.println(line);
-                }
-//                if(filmwebId.equals("1"))
-//                {
-//                    isStart=true;
-//                }
-//                ile++;
-//                System.out.println(ile);
+        boolean isStart = false; //jak mi sie przerwie i wtedy ustwaiam tam dalej jaki id
+        int row = 0;
+        if (!is_test) {
+            if (startId == 0) {
+                isStart = true; //za pierwszym razme
             }
-            movieRepository.saveAll(movieList);
-        } catch (IOException e) {
-            e.printStackTrace(); // Handle the exception according to your application's needs
-        }
-        System.out.println("pobrano dane TMDB" + filePath3);
-    }
+            try (BufferedReader br = new BufferedReader(new FileReader(filePath));
+                 BufferedReader br2 = new BufferedReader(new FileReader(filePath2));
+                 BufferedReader br3 = new BufferedReader(new FileReader(filePath3))) {
+                String line;
+                String year;
+                String filmwebId;
+                List<TmdbMovie> tmdbMovieList = new ArrayList<>();
+                List<Movie> movieList = new ArrayList<>();
+                while ((line = br.readLine()) != null && (year = br2.readLine()) != null && (filmwebId = br3.readLine()) != null) {
+                    System.out.println(filmwebId);
+                    row++;
+                    if (isStart) {
+                        Movie movie = saveTmdb(line, year, filmwebId); //tabela filmwebMovies
 
+                        //dodaje do list
+                        if (movie != null) {
+                            movieList.add(movie);
+                        }
+                        System.out.println(line);
+                    }
+                    if (row == startId) {
+                        isStart = true;
+                    }
+                }
+                movieRepository.saveAll(movieList);
+            } catch (IOException e) {
+                e.printStackTrace(); // Handle the exception according to your application's needs
+            }
+            System.out.println("pobrano dane TMDB" + filePath3);
+        } else {
+            System.out.println("tmdb collector sie uruchomil");
+        }
+    }
+    //---------------------------------------------------------------------------------------------------
+//    private static final int NUM_THREADS = 16;
+//
+//    public void collect(String filePath, String filePath2, String filePath3, boolean isTest) {
+//        if (!isTest) {
+//            try (BufferedReader br = new BufferedReader(new FileReader(filePath));
+//                 BufferedReader br2 = new BufferedReader(new FileReader(filePath2));
+//                 BufferedReader br3 = new BufferedReader(new FileReader(filePath3))) {
+//
+//                List<List<String>> chunks = partitionFile(br, br2, br3);
+//
+//                ExecutorService executor = Executors.newFixedThreadPool(NUM_THREADS);
+//                for (List<String> chunk : chunks) {
+//                    executor.execute(() -> processChunk(chunk));
+//                }
+//                executor.shutdown();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            System.out.println("TMDB data collected from " + filePath3);
+//        } else {
+//            System.out.println("TMDB collector started.");
+//        }
+//    }
+//
+//    private List<List<String>> partitionFile(BufferedReader br1, BufferedReader br2, BufferedReader br3) throws IOException {
+//        List<List<String>> chunks = new ArrayList<>();
+//        List<String> chunk = new ArrayList<>();
+//        String line;
+//        String year;
+//        String filmwebId;
+//        while ((line = br1.readLine()) != null && (year = br2.readLine()) != null && (filmwebId = br3.readLine()) != null) {
+//            chunk.add(line);
+//            chunk.add(year);
+//            chunk.add(filmwebId);
+//            if (chunk.size() >= 6848 / NUM_THREADS) { // Adjust this division according to the actual number of IDs
+//                chunks.add(new ArrayList<>(chunk));
+//                chunk.clear();
+//            }
+//        }
+//        if (!chunk.isEmpty()) {
+//            chunks.add(chunk);
+//        }
+//        return chunks;
+//    }
+//
+//    private void processChunk(List<String> chunk) {
+//        for (int i = 0; i < chunk.size(); i += 3) {
+//            String title = chunk.get(i);
+//            String year = chunk.get(i + 1);
+//            String filmwebId = chunk.get(i + 2);
+//            try {
+//                saveTmdb(title, year, filmwebId);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
+
+    //---------------------------------------------------------------------------------------
     @Transactional
     public Movie saveTmdb(String title, String year, String filmwebId) throws IOException {
         TmdbMovieAndMovie tmdbMovieAndMovie = new TmdbMovieAndMovie();
