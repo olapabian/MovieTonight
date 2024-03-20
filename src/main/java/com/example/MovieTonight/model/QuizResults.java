@@ -1,5 +1,7 @@
 package com.example.MovieTonight.model;
 
+import com.example.MovieTonight.enums.Attitude;
+import com.example.MovieTonight.enums.ValueType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,15 +26,17 @@ public class QuizResults {
     private Long userId;
 
     @Column(name = "value_type")
-    private String valueType;
+    @Enumerated(EnumType.STRING)
+    private ValueType valueType;
 
     @Column(name = "value")
     private String value;
 
     @Column(name = "attitude")
-    private String attitude;
+    @Enumerated(EnumType.STRING)
+    private Attitude attitude;
 
-    public QuizResults(Long quizId, Long userId, String valueType, String value, String attitude) {
+    public QuizResults(Long quizId, Long userId, ValueType valueType, String value, Attitude attitude) {
         this.quizId = quizId;
         this.userId = userId;
         this.valueType = valueType;
@@ -43,4 +47,5 @@ public class QuizResults {
     public QuizResults(){
 
     }
+
 }

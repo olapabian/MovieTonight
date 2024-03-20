@@ -13,4 +13,5 @@ public class GenreQuestionsRequest {
     private String side;
     private String time;
     private String releaseDate;
+    private String adult;
 }

@@ -16,17 +16,17 @@ public class QuestionAlgorithmController {
     }
 
     @GetMapping("getStartingQuestions")
-    public QuestionsResponse getStartingQuestions(){
+    public StartingQuestionsResponse getStartingQuestions(){
         return this.questionAlgorithmImp.getStartingQuestions();
     }
 
     @GetMapping("getGenreQuestions")
-    public QuestionsResponse getGenreQuestions(GenreQuestionsRequest genreQuestionsRequest){
+    public GenreQuestionsResponse getGenreQuestions(GenreQuestionsRequest genreQuestionsRequest){
         return this.questionAlgorithmImp.getGenreQuestions(genreQuestionsRequest);
     }
 
     @GetMapping("getKeywordQuestions")
-    public QuestionsResponse getKeywordQuestions(KeywordQuestionsRequest keywordQuestionsRequest){
+    public KeywordQuestionsResponse getKeywordQuestions(KeywordQuestionsRequest keywordQuestionsRequest){
         return this.questionAlgorithmImp.getKeywordQuestions(keywordQuestionsRequest);
     }
 
