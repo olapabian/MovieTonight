@@ -1,10 +1,9 @@
-package com.example.MovieTonight.DataCollector.Filmweb;
+package com.example.MovieTonight.dataCollector.Filmweb;
 
 
-import com.example.MovieTonight.JSONs.Filmweb.InfoRequest;
-import com.example.MovieTonight.JSONs.Filmweb.RatingRequest;
+import com.example.MovieTonight.jSONs.Filmweb.InfoRequest;
+import com.example.MovieTonight.jSONs.Filmweb.RatingRequest;
 import com.google.gson.Gson;
-import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

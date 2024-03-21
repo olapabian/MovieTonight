@@ -1,8 +1,5 @@
 package com.example.MovieTonight;
 
-import com.example.MovieTonight.DataCollector.Filmweb.FilmwebCollector;
-import com.example.MovieTonight.Repository.MovieRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
