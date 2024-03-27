@@ -14,9 +14,9 @@ public class CollectingController {
 
     @GetMapping("/collect")
     public void collect() throws Exception {
-        boolean collect_ids = true;
+        boolean collect_ids = false;
         boolean collect_filmweb = true;
-        boolean collect_tmdb = false;
+        boolean collect_tmdb = true;
         mainCollector.collect(collect_ids, collect_filmweb, collect_tmdb);
     }
 }
