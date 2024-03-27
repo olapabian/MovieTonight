@@ -78,63 +78,7 @@ public class TMDBCollector {
         }
     }
     //---------------------------------------------------------------------------------------------------
-//    private static final int NUM_THREADS = 16;
-//
-//    public void collect(String filePath, String filePath2, String filePath3, boolean isTest) {
-//        if (!isTest) {
-//            try (BufferedReader br = new BufferedReader(new FileReader(filePath));
-//                 BufferedReader br2 = new BufferedReader(new FileReader(filePath2));
-//                 BufferedReader br3 = new BufferedReader(new FileReader(filePath3))) {
-//
-//                List<List<String>> chunks = partitionFile(br, br2, br3);
-//
-//                ExecutorService executor = Executors.newFixedThreadPool(NUM_THREADS);
-//                for (List<String> chunk : chunks) {
-//                    executor.execute(() -> processChunk(chunk));
-//                }
-//                executor.shutdown();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            System.out.println("TMDB data collected from " + filePath3);
-//        } else {
-//            System.out.println("TMDB collector started.");
-//        }
-//    }
-//
-//    private List<List<String>> partitionFile(BufferedReader br1, BufferedReader br2, BufferedReader br3) throws IOException {
-//        List<List<String>> chunks = new ArrayList<>();
-//        List<String> chunk = new ArrayList<>();
-//        String line;
-//        String year;
-//        String filmwebId;
-//        while ((line = br1.readLine()) != null && (year = br2.readLine()) != null && (filmwebId = br3.readLine()) != null) {
-//            chunk.add(line);
-//            chunk.add(year);
-//            chunk.add(filmwebId);
-//            if (chunk.size() >= 6848 / NUM_THREADS) { // Adjust this division according to the actual number of IDs
-//                chunks.add(new ArrayList<>(chunk));
-//                chunk.clear();
-//            }
-//        }
-//        if (!chunk.isEmpty()) {
-//            chunks.add(chunk);
-//        }
-//        return chunks;
-//    }
-//
-//    private void processChunk(List<String> chunk) {
-//        for (int i = 0; i < chunk.size(); i += 3) {
-//            String title = chunk.get(i);
-//            String year = chunk.get(i + 1);
-//            String filmwebId = chunk.get(i + 2);
-//            try {
-//                saveTmdb(title, year, filmwebId);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
+
 
     //---------------------------------------------------------------------------------------
     @Transactional

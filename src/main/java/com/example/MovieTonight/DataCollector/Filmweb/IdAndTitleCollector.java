@@ -25,7 +25,6 @@ IdAndTitleCollector {
 
     private int ile;
 
-    //    @PostConstruct
     public void collect(boolean is_test) {
         if (!is_test) {
             List<Thread> threads = new ArrayList<>();

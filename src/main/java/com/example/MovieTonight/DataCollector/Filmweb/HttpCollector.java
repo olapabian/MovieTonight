@@ -31,6 +31,25 @@ public class HttpCollector {
             in.close();
         }
     }
+
+    public byte[] getResponseBytes() throws IOException {
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestProperty("x-locale", "pl-PL");
+        con.setReadTimeout(5000);
+        int responseCode = con.getResponseCode();
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        try (InputStream inputStream = con.getInputStream()) {
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+        }
+
+        return outputStream.toByteArray();
+    }
+
     public void writeToConsole() {
         System.out.println(this.response.toString());
     }

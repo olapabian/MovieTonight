@@ -17,7 +17,6 @@ public class MainCollector {
     private FilmwebCollector filmwebCollector;
     @Autowired
     private TMDBCollector tmdbCollector;
-
     public void collect(boolean collect_ids, boolean collect_filmweb, boolean collect_tmdb) throws Exception {
         if (collect_ids) {
             boolean is_test = true;
