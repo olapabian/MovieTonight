@@ -1,4 +1,4 @@
-package com.example.MovieTonight.DataCollector.Filmweb;
+package com.example.MovieTonight.dataCollector.filmweb;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,7 +16,7 @@ public class HttpCollector {
     URL url;
 
     private StringBuilder response = new StringBuilder();
-    public void Collect() throws IOException {
+    public void collect() throws IOException {
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestProperty("x-locale", "pl-PL");
         // Ustawienie limitu czasu odczytu na 5000 milisekund (5 sekund)

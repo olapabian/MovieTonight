@@ -1,8 +1,8 @@
-package com.example.MovieTonight.DataCollector;
+package com.example.MovieTonight.dataCollector;
 
-import com.example.MovieTonight.DataCollector.Filmweb.FilmwebCollector;
-import com.example.MovieTonight.DataCollector.Filmweb.IdAndTitleCollector;
-import com.example.MovieTonight.DataCollector.TMDB.TMDBCollector;
+import com.example.MovieTonight.dataCollector.TMDB.TMDBCollector;
+import com.example.MovieTonight.dataCollector.filmweb.FilmwebCollector;
+import com.example.MovieTonight.dataCollector.filmweb.IdAndTitleCollector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,14 +23,9 @@ public class MainCollector {
             idAndTitleCollector.collect(is_test);
         }
         if (collect_filmweb) {
-            boolean is_test = true;
-
-            //Najpierw pobieranie providers list
-            filmwebCollector.collectProvidersInfo(is_test); //lista wszystkich providers
-
+            boolean is_test = false;
+            filmwebCollector.collectProvidersInfo(is_test);
             List<Thread> threads = new ArrayList<>();
-
-            // Utwórz i uruchom 10 wątków
             for (int i = 0; i < 9; i++) {
                 String filePath = "filmwebIDs" + i + ".txt";
                 Thread thread = new Thread(() -> {
@@ -41,10 +36,8 @@ public class MainCollector {
                     }
                 });
                 thread.start();
-                threads.add(thread); // Dodaj wątek do listy
+                threads.add(thread);
             }
-
-            // Poczekaj na zakończenie wszystkich wątków
             for (Thread thread : threads) {
                 thread.join();
             }
@@ -55,7 +48,6 @@ public class MainCollector {
             boolean is_test = true;
 
             List<Thread> threads = new ArrayList<>();
-            // Create and start 4 threads for the first file
             for (int i = 0; i < 4; i++) {
                 String filePath = "titles0.txt";
                 String filePath2 = "years0.txt";
@@ -71,8 +63,6 @@ public class MainCollector {
                 thread.start();
                 threads.add(thread);
             }
-
-            // Utwórz i uruchom 10 wątków tmdb
             for (int i = 1; i < 9; i++) {
                 String filePath = "titles" + i + ".txt";
                 String filePath2 = "years" + i + ".txt";
@@ -90,8 +80,6 @@ public class MainCollector {
             for (Thread thread : threads) {
                 thread.join();
             }
-
-            // Informacja o zakończeniu wszystkich wątków
             System.out.println("Wszystkie wątki zakończone.");
         }
     }

@@ -2,23 +2,19 @@ package com.example.MovieTonight.Model.database;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
 @Table(name = "movie")
 public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    //moze String
     private Long id;
-
-//    @Id
-//    @GeneratedValue()
-//    @Column(name = "id", nullable = false)
-//    private UUID id;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "filmweb_id")
@@ -33,5 +29,11 @@ public class Movie {
 
     @Column(name = "original_title", length = Integer.MAX_VALUE)
     private String originalTitle;
+
+    public Movie(String title, String originalTitle, FilmwebMovie filmwebMovie) {
+        this.title = title;
+        this.originalTitle = originalTitle;
+        this.filmweb = filmwebMovie;
+    }
 
 }

@@ -1,4 +1,4 @@
-package com.example.MovieTonight.DataCollector.TMDB;
+package com.example.MovieTonight.dataCollector.TMDB;
 
 import com.example.MovieTonight.JSONs.TMDB.GsonMovie;
 import com.example.MovieTonight.JSONs.TMDB.KeywordsRequest;

@@ -19,7 +19,6 @@ public class GenreController {
 
     @GetMapping("/img/{genreId}")
     public ResponseEntity<byte[]> getGenreImage(@PathVariable Long genreId) {
-        System.out.println("pobieranie obrazka");
         byte[] imageBytes = genreService.getGenreImg(genreId);
         if (imageBytes != null) {
             HttpHeaders headers = new HttpHeaders();

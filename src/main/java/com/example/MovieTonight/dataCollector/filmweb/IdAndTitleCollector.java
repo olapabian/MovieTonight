@@ -1,12 +1,12 @@
-package com.example.MovieTonight.DataCollector.Filmweb;
+package com.example.MovieTonight.dataCollector.filmweb;
 
 
-import com.example.MovieTonight.DataCollector.TMDB.ApiCollector;
 import com.example.MovieTonight.JSONs.Filmweb.InfoRequest;
 import com.example.MovieTonight.JSONs.Filmweb.RatingRequest;
 import com.example.MovieTonight.JSONs.TMDB.GsonMovie;
 import com.example.MovieTonight.JSONs.TMDB.MovieSearchResponse;
 import com.example.MovieTonight.Model.others.InfoAndBool;
+import com.example.MovieTonight.dataCollector.TMDB.ApiCollector;
 import com.google.gson.Gson;
 import okhttp3.Response;
 import org.springframework.stereotype.Service;
@@ -161,7 +161,7 @@ IdAndTitleCollector {
             // -----------------Request rating rating and rating count needed to check popularity--------------------------------------------------
             URL url = new URL("https://www.filmweb.pl/api/v1/film/" + filmId + "/rating");
             HttpCollector ratingCollector = new HttpCollector(url);
-            ratingCollector.Collect();
+            ratingCollector.collect();
 
             if (!ratingCollector.getResponse().isEmpty()) {
                 String response = String.valueOf(ratingCollector.getResponse());
@@ -193,7 +193,7 @@ IdAndTitleCollector {
             try {
                 URL url2 = new URL("https://www.filmweb.pl/api/v1/vod/film/" + filmId + "/providers/list");
                 HttpCollector httpCollector = new HttpCollector(url2);
-                httpCollector.Collect();
+                httpCollector.collect();
                 if (httpCollector.getResponse().isEmpty() || httpCollector.getResponse() == null) {
                     infoAndBool.setFlag(false);
                     System.out.println("nie ma providerowwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww");
@@ -208,7 +208,7 @@ IdAndTitleCollector {
             //----------------------------Request info to check is that film-------------------------------------
             URL url1 = new URL("https://www.filmweb.pl/api/v1/film/" + filmId + "/info");
             HttpCollector infoCollector = new HttpCollector(url1);
-            infoCollector.Collect();
+            infoCollector.collect();
 
             if (!infoCollector.getResponse().isEmpty()) {
                 String response1 = String.valueOf(infoCollector.getResponse());

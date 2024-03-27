@@ -5,11 +5,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
 @Table(name = "filmweb_movies")
 public class FilmwebMovie {
     @Id
@@ -25,4 +27,7 @@ public class FilmwebMovie {
     @Column(name = "rating_count", length = Integer.MAX_VALUE)
     private String ratingCount;
 
+    public FilmwebMovie(Long releaseDate) {
+        this.releaseDate = releaseDate;
+    }
 }

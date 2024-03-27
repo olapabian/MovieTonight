@@ -1,4 +1,4 @@
-package com.example.MovieTonight.DataCollector.Filmweb;
+package com.example.MovieTonight.dataCollector.filmweb;
 
 import com.example.MovieTonight.Model.database.GenreImages;
 import com.example.MovieTonight.Model.database.GenresInfo;
@@ -27,7 +27,7 @@ public class GenresPhotosCollector {
             GenresInfo genresInfo = genresInfoOptional.get();
             URL postreImgUrl = new URL("https://s3.viva.pl/newsy/kadr-z-filmu-tulipanowa-goraczka-1-681526-GALLERY_BIG.jpg");
             HttpCollector posterCollector = new HttpCollector(postreImgUrl);
-            posterCollector.Collect();
+            posterCollector.collect();
 
             byte[] photoImgBytes = posterCollector.getResponseBytes();
 
