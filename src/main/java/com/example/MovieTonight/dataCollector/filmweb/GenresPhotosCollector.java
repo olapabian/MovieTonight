@@ -1,9 +1,9 @@
 package com.example.MovieTonight.dataCollector.filmweb;
 
-import com.example.MovieTonight.Model.database.GenreImages;
-import com.example.MovieTonight.Model.database.GenresInfo;
-import com.example.MovieTonight.Repository.GenreImagesRepository;
-import com.example.MovieTonight.Repository.GenresInfoRepository;
+import com.example.MovieTonight.model.database.GenreImages;
+import com.example.MovieTonight.model.database.GenresInfo;
+import com.example.MovieTonight.repository.GenreImagesRepository;
+import com.example.MovieTonight.repository.GenresInfoRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

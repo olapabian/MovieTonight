@@ -1,11 +1,11 @@
 package com.example.MovieTonight.dataCollector.filmweb;
 
 
-import com.example.MovieTonight.JSONs.Filmweb.InfoRequest;
-import com.example.MovieTonight.JSONs.Filmweb.RatingRequest;
-import com.example.MovieTonight.JSONs.TMDB.GsonMovie;
-import com.example.MovieTonight.JSONs.TMDB.MovieSearchResponse;
-import com.example.MovieTonight.dataCollector.TMDB.ApiCollector;
+import com.example.MovieTonight.dataCollector.tmdb.ApiCollector;
+import com.example.MovieTonight.jsons.filmweb.InfoRequest;
+import com.example.MovieTonight.jsons.filmweb.RatingRequest;
+import com.example.MovieTonight.jsons.tmdb.GsonMovie;
+import com.example.MovieTonight.jsons.tmdb.MovieSearchResponse;
 import com.google.gson.Gson;
 import okhttp3.Response;
 import org.slf4j.Logger;

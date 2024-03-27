@@ -1,7 +1,7 @@
 package com.example.MovieTonight.services;
 
-import com.example.MovieTonight.Model.database.GenreImages;
-import com.example.MovieTonight.Repository.GenreImagesRepository;
+import com.example.MovieTonight.model.database.GenreImages;
+import com.example.MovieTonight.repository.GenreImagesRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

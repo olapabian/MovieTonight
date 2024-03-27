@@ -1,18 +1,18 @@
 package com.example.MovieTonight.dataCollector.filmweb;
 
 
-import com.example.MovieTonight.JSONs.Filmweb.InfoRequest;
-import com.example.MovieTonight.JSONs.Filmweb.MovieProvidersRequest;
-import com.example.MovieTonight.JSONs.Filmweb.ProvidersRequest;
-import com.example.MovieTonight.JSONs.Filmweb.RatingRequest;
-import com.example.MovieTonight.Model.database.FilmwebMovie;
-import com.example.MovieTonight.Model.database.Movie;
-import com.example.MovieTonight.Model.database.MovieProvider;
-import com.example.MovieTonight.Model.database.ProvidersInfo;
-import com.example.MovieTonight.Repository.FilmwebMovieRepository;
-import com.example.MovieTonight.Repository.MovieProvidersRepository;
-import com.example.MovieTonight.Repository.MovieRepository;
-import com.example.MovieTonight.Repository.ProvidersInfoRepository;
+import com.example.MovieTonight.jsons.filmweb.InfoRequest;
+import com.example.MovieTonight.jsons.filmweb.MovieProvidersRequest;
+import com.example.MovieTonight.jsons.filmweb.ProvidersRequest;
+import com.example.MovieTonight.jsons.filmweb.RatingRequest;
+import com.example.MovieTonight.model.database.FilmwebMovie;
+import com.example.MovieTonight.model.database.Movie;
+import com.example.MovieTonight.model.database.MovieProvider;
+import com.example.MovieTonight.model.database.ProvidersInfo;
+import com.example.MovieTonight.repository.FilmwebMovieRepository;
+import com.example.MovieTonight.repository.MovieProvidersRepository;
+import com.example.MovieTonight.repository.MovieRepository;
+import com.example.MovieTonight.repository.ProvidersInfoRepository;
 import com.google.gson.Gson;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -107,7 +107,7 @@ public class FilmwebCollector {
             titleAsString = String.valueOf(infoRequest.getTitle());
 
             if (infoRequest.getOriginalTitle() != null && !infoRequest.getOriginalTitle().isEmpty()) {
-                originalTitleAsString = String.valueOf(infoRequest.getOriginalTitle());
+                originalTitleAsString = infoRequest.getOriginalTitle();
             } else originalTitleAsString = String.valueOf(infoRequest.getTitle());
 
             releaseDateAsLong = (long) infoRequest.getYear();
