@@ -3,7 +3,7 @@ package com.example.MovieTonight.JSONs.Filmweb;
 import com.google.gson.annotations.SerializedName;
 
 public class InfoRequest {
-    //klasa do serializacji JSONów
+    private boolean flag;
     @SerializedName("title")
     private String title;
 
@@ -21,6 +21,18 @@ public class InfoRequest {
 
     @SerializedName("posterPath")
     private String posterPath;
+
+    public boolean isFlag() {
+        return flag;
+    }
+
+    public InfoRequest(boolean flag) {
+        this.flag = flag;
+    }
+
+    public void setFlag(boolean flag) {
+        this.flag = flag;
+    }
 
     public String getTitle() {
         return title;

@@ -8,10 +8,11 @@ import lombok.Setter;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
 public class HttpCollector {
     URL url;
 
@@ -19,9 +20,7 @@ public class HttpCollector {
     public void collect() throws IOException {
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestProperty("x-locale", "pl-PL");
-        // Ustawienie limitu czasu odczytu na 5000 milisekund (5 sekund)
         con.setReadTimeout(5000);
-        int responseCode = con.getResponseCode();
         {
             BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
             String inputLine;
@@ -36,7 +35,6 @@ public class HttpCollector {
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestProperty("x-locale", "pl-PL");
         con.setReadTimeout(5000);
-        int responseCode = con.getResponseCode();
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try (InputStream inputStream = con.getInputStream()) {
@@ -50,27 +48,8 @@ public class HttpCollector {
         return outputStream.toByteArray();
     }
 
-    public void writeToConsole() {
-        System.out.println(this.response.toString());
-    }
-
     public HttpCollector(URL url) {
         this.url = url;
     }
 
-    public StringBuilder getResponse() {
-        return response;
-    }
-
-    public URL getUrl() {
-        return url;
-    }
-
-    public void setUrl(URL url) {
-        this.url = url;
-    }
-
-    public void setResponse(StringBuilder response) {
-        this.response = response;
-    }
 }

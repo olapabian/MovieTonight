@@ -17,11 +17,9 @@ public class GenresPhotosCollector {
     private final GenreImagesRepository genreImagesRepository;
     private final GenresInfoRepository genresInfoRepository;
 
-    //    @PostConstruct
     public void insertPhotoGenre() throws Exception {
         GenreImages genreImages = new GenreImages();
-        // Dla gatunku animacja (16)
-        // Optional<GenresInfo> genresInfoOptional = genresInfoRepository.findById(16L);
+
         Optional<GenresInfo> genresInfoOptional = genresInfoRepository.findById(10749L);
         if (genresInfoOptional.isPresent()) {
             GenresInfo genresInfo = genresInfoOptional.get();

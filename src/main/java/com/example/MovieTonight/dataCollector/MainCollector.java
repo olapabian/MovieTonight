@@ -18,12 +18,11 @@ public class MainCollector {
     @Autowired
     private TMDBCollector tmdbCollector;
     public void collect(boolean collect_ids, boolean collect_filmweb, boolean collect_tmdb) throws Exception {
+        boolean is_test = false;
         if (collect_ids) {
-            boolean is_test = true;
             idAndTitleCollector.collect(is_test);
         }
         if (collect_filmweb) {
-            boolean is_test = false;
             filmwebCollector.collectProvidersInfo(is_test);
             List<Thread> threads = new ArrayList<>();
             for (int i = 0; i < 9; i++) {
@@ -45,7 +44,6 @@ public class MainCollector {
             System.out.println("Wszystkie wątki zakończone.");
         }
         if (collect_tmdb) {
-            boolean is_test = true;
 
             List<Thread> threads = new ArrayList<>();
             for (int i = 0; i < 4; i++) {
