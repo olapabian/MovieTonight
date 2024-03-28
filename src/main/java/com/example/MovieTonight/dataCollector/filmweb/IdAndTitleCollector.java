@@ -30,8 +30,8 @@ public class IdAndTitleCollector {
         if (!is_test) {
             List<Thread> threads = new ArrayList<>();
             for (int i = 0; i < 9; i++) {
-                int from = i * 10;
-                int to = (i + 1) * 10;
+                int from = i * 100000;
+                int to = (i + 1) * 100000;
                 int finalI = i;
                 Thread thread = new Thread(() -> collectPart(from, to, String.valueOf(finalI)));
                 thread.start();
